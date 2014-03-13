@@ -1,0 +1,355 @@
+                                     GRADER
+
+Name of student running submit:
+Login of student running submit:
+
+Second team member's name:
+Second team member's login:
+
+Third team member's name (if any):
+Third team member's login:
+
+IMPORTANT:  Once you've submitted Project 2 once, the same team member should
+submit always.  If a different teammate must submit, inform cs61b@cory.eecs of
+all the details.  Include a complete list of team members, and let us know
+which submission you want graded.
+
+If you've submitted your project once, or even written a substantial amount of
+code together, you may not change partners without the permission of the
+instructor.
+===============================================================================
+Does your program compile without errors?
+
+
+Have you tested your program on the 61B lab machines?
+
+
+Did you successfully implement game tree search?  Did you successfully
+implement alpha-beta pruning?  Are there any limitations on it?  What is the
+default number of search levels set by the one-parameter MachinePlayer
+constructor (or is it a variable-depth search)?
+
+
+Describe your board evaluation function in some detail.
+
+
+Does your MachinePlayer use any special method of choosing the first few moves?
+
+
+Is there anything else the graders should know to help them read your project?
+
+
+
+Describe the classes, modules, and interfaces you designed before and while you
+implemented the project.  Your description should include:
+  -  A list of the classes your program uses.
+  -  A list of each of the "modules" used in or by MachinePlayer, similar to
+     the list in the "Teamwork" section of the README (but hopefully more
+     detailed).  (If you're using a list class, that should probably count as
+     a separate module.)
+  -  For each module, list the class(es) the module is implemented in.
+  -  For each module, say which of your team members implemented it.
+  -  For each module, describe its interface--specifically, the prototype and
+     behavior of each method that is available for external callers (outside
+     the module) to call.  Don't include methods that are only meant to be
+     called from within the module.
+
+     For each method, provide (1) a method prototype and (2) a complete,
+     unambiguous description of the behavior of the method/module.  This
+     description should also appear before the method in your code's comments.
+
+You will probably need to change some of your design decisions as you go; be
+sure to modify this file to reflect these changes before you submit your
+project.  Your design of classes and interfaces will be worth 10% of your
+grade.
+
+
+
+Classes: MachinePlayer, Board, NetworkHandler, Scorer, LinkedList
+
+Modules:
+	- Machine Player		plays a game of Network; chooses and accepts moves
+	- Board					stores an internal representation of the Network
+								game board that can be updated with moves
+	- Network Handling		finds completed networks, partial networks and
+								network stats for scoring
+	- Valid Move Choosing	provides a list of possible moves and tells if a
+								move is valid
+	- Board Scoring			estimates a score for a given board based on
+								heuristics
+	- Move Choosing			selects a valid move based on minimax algorithm
+	- List					provides a means of data storage
+
+Machine Player (Person 1):
+	Classes: MachinePlayer
+	Methods:
+		/**
+		 * Constructs a machine player of specified color and variable search
+		 * depth. Color is either Board.BLACK (0) or Board.WHITE (1). White
+		 * has the first move.
+		 * 
+		 * @param color		the color of this MachinePlayer; 0 black, 1 white
+		 */
+		public MachinePlayer(int color);
+		
+		/**
+		 * Constructs a machine player of specified color and search depth. Color
+		 * is either Board.BLACK (0) or Board.WHITE (1). White has the first move.
+		 * 
+		 * @param color			the color of this MachinePlayer; 0 black, 1 white
+		 * @param searchDepth	the maximum search depth for chooseMove
+		 */
+		public MachinePlayer(int color, int searchDepth);
+		
+		/**
+		 * Records the specified move as a move by the opponent if it is legal and
+		 * returns true. If the move is not legal, returns false and does not
+		 * record the move.
+		 * 
+		 * @param m		the Move provided by the opponent
+		 * @return	true if legal move, false otherwise
+		 */
+		public boolean opponentMove(Move m);
+		
+		/**
+		 * Forces this player to make the specified move if legal and returns true.
+		 * If the move is not legal, returns false and does not record the move.
+		 * 
+		 * @param m		the Move forced to make
+		 * @return	true if legal move, false otherwise
+		 */
+		public boolean forceMove(Move m);
+		
+Board (Person 2):
+	Classes: Board
+	Methods:
+		/**
+		 * Constructs an empty Board.
+		 */
+		public Board();
+		
+		/**
+		 * Updates the board's configuration with the supplied move made by the
+		 * supplied color. Assumes that m is a valid move.
+		 * 
+		 * @param m			Move to update board with
+		 * @param color		color of the player who made the move
+		 */
+		public void makeMove(Move m, int color);
+		
+		/**
+		 * Rolls the board back one move.
+		 */
+		public void rollback();
+		
+		/**
+		 * Returns the number of pieces on the board for the specified color.
+		 * 
+		 * @param color		color of the player
+		 * @return	the number of pieces of the specified color
+		 */
+		public int getNumPieces(int color);
+		
+Network Handling (Person 2):
+	Classes: Board, NetworkHandler
+	Methods:
+		Board
+		-----------------------------------------------------------------------
+		/**
+		 * Returns true if the player of the specified color has a fully formed
+		 * network (as defined in the README) and false otherwise.
+		 * 
+		 * @param color		color of the player
+		 * @return	true if a network for the specified player exists, false otherwise
+		 */
+		public boolean hasNetwork(int color);
+		
+		/**
+		 * Returns a LinkedList of the sizes of all the subnetworks
+		 * for the specified color.
+		 * 
+		 * @param color		color of the player
+		 * @return	a list of the sizes of all the subnetworks.
+		 */
+		public LinkedList<Integer> getNetworkSizes(int color);
+		
+		/**
+		 * Returns the number of connections between two pieces of the specified
+		 * color on the board
+		 * 
+		 * @param color		color of the player
+		 * @return	the number of connections of the color color
+		 */
+		public int getNumConnections(int color);
+		
+		NetworkHandler
+		-----------------------------------------------------------------------
+		/**
+		 * Creates a new empty NetworkHandler.
+		 */
+		NetworkHandler();
+		
+		/**
+		 * Updates internal configuration with the specified move for the
+		 * specified color. Assumes that m is a valid move. Uses color
+		 * as specified in Board.WHITE and Board.BLACK (assume the same for other
+		 * methods).
+		 * 
+		 * @param m			Move to update with
+		 * @param color		color of the player who made the move
+		 */
+		void makeMove(Move m, int color);
+		
+		/**
+		 * Updates the internal configuration to remove the specified move for the
+		 * specified color. Assumes that m was the last move and made
+		 * by the specified player.
+		 * 
+		 * @param m			Move to remove
+		 * @param color		color of the player who made the move
+		 */
+		void undoMove(Move m, int color);
+		
+		/**
+		 * Returns true if the player of the specified color has a fully formed
+		 * network (as defined in the README) and false otherwise.
+		 * 
+		 * @param color		color of the player
+		 * @return	true if a network for the specified player exists, false otherwise
+		 */
+		boolean hasNetwork(int color);
+		
+		/**
+		 * Returns a <code>LinkedList</code> of the sizes of all the subnetworks
+		 * for the specified color.
+		 * 
+		 * @param color		color of the player
+		 * @return	a list of the sizes of all the subnetworks.
+		 */
+		LinkedList<Integer> getNetworkSizes(int color);
+		
+		/**
+		 * Returns the number of connections between two pieces of the specified
+		 * color on the board
+		 * 
+		 * @param color		color of the player
+		 * @return	the number of connections of the color color
+		 */
+		int getNumConnections(int color);
+		
+Valid Move Choosing (Person 3):
+	Classes: Board
+	Methods:
+		/**
+		 * Returns true if m is a valid move for the specified color, false
+		 * otherwise.
+		 * 
+		 * @param m			the move to test
+		 * @param color		color of the player
+		 * @return	true if valid move, false otherwise
+		 */
+		public boolean isValidMove(Move m, int color);
+		
+		/**
+		 * Provides a LinkedList of all the valide possible moves for
+		 * the given player.
+		 * 
+		 * @param color		color of the player
+		 * @return	a list of all the valid moves
+		 */
+		public LinkedList<Move> getValidMoves(int color);
+		
+Board Scoring (Person 3):
+	Classes: Scorer
+	Methods:
+		/**
+		 * Scores the specified board for the specified color and returns an int
+		 * on the scale from -1000 to 1000, where 1000 specifies the player of
+		 * the specified color winning and -1000, losing. Values in between are
+		 * determined by heuristics. Color is Board.BLACK for black and
+		 * Board.WHITE for white.
+		 * 
+		 * @param b			the board to score
+		 * @param color		the color of the player to score
+		 * @return	an integer from -1000 to 1000 specifying the score of the board
+		 */
+		static int getScore(Board b, int color);
+		
+Move Choosing (Person 1):
+	Classes: MachinePlayer
+	Methods:
+		/**
+		 * Returns a new <code>Move</code> by this player.  Internally records the
+		 * move (update the internal game board) as a move by this player.
+		 * 
+		 * @return	the Move chosen by this player
+		 */
+		public Move chooseMove();
+		
+List (Done):
+	Classes: LinkedList
+	Methods:
+		/**
+	     * Creates an empty LinkedList
+	     */
+		public LinkedList();
+	        
+	    /**
+	     * Prints out every element in the list.
+	     * 
+	     * @return the String representing the LinkedList
+	     */
+		public String toString();
+	        
+	    /**
+	     * Returns the size of this LinkedList. 
+	     */
+		public int size();
+	        
+	    /**
+	     * Returns the value of this LinkedList at the specified index
+	     * 
+	     * @param index index from which to return the value
+	     * @return the value of the LinkedList
+	     */
+		public E get(int index);
+	             
+	    /**
+	     * Replaces the element at position index with obj and returns the
+	     * element formerly at the specified position
+	     * 
+	     * @param index index at which to set
+	     * @param obj new value to set to
+	     * @return old value
+	     */
+		public E set(int index, E obj);
+	
+	    /**
+	     * Appends obj to this list.
+	     * 
+	     * @param obj value to append
+	     */
+		public void add(E obj);
+	
+	    /**
+	     * Removes the element at the specified index and returns its value
+	     * 
+	     * @param index element which to remove
+	     * @return value at index
+	     */
+		public E remove(int index);
+	
+	    /**
+	     * Inserts the new element at the required index, moving all the
+	     * elements past the index one to the right.
+	     * 
+	     * @param index index at which to insert
+	     * @param obj element which to insert
+	     */
+		public void add(int index, E obj);
+	
+	    /**
+	     * Create a new iterator for this LinkedList, as specified in the Iterator
+	     * interface.
+	     */
+	    public Iterator<E> iterator();
