@@ -226,6 +226,8 @@ public class LinkedList<E> implements Iterable<E> {
 
     /**
      * Create a new iterator for this LinkedList.
+     * 
+     * @return	an iterator over this LinkedList
      */
     public Iterator<E> iterator() {
         return new LinkedListIterator();
