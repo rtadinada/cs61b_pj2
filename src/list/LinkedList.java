@@ -123,6 +123,7 @@ public class LinkedList<E> implements Iterable<E> {
      * @param index index from which to return the value
      * @return the value of the LinkedList
      */
+	@SuppressWarnings("unchecked")
 	public E get(int index) {
         return (E)getNode(index).value;
 	}
@@ -135,6 +136,7 @@ public class LinkedList<E> implements Iterable<E> {
      * @param obj new value to set to
      * @return old value
      */
+	@SuppressWarnings("unchecked")
 	public E set(int index, E obj) {
         DoubleNode temp = getNode(index);
         E toReturn = (E)temp.value;
@@ -166,6 +168,7 @@ public class LinkedList<E> implements Iterable<E> {
      * @param index element which to remove
      * @return value at index
      */
+	@SuppressWarnings("unchecked")
 	public E remove(int index)	{
         DoubleNode toReturn;
         if(size == 0)
@@ -256,7 +259,8 @@ public class LinkedList<E> implements Iterable<E> {
         /**
          * Returns the next element in the iteration
          */
-        public E next() {
+        @SuppressWarnings("unchecked")
+		public E next() {
             if(!hasNext())
                 throw new java.util.NoSuchElementException();
 

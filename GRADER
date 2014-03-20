@@ -80,6 +80,11 @@ Modules:
 	- Move Choosing			selects a valid move based on minimax algorithm
 	- List					provides a means of data storage
 
+Person 1: TBD
+Person 2: TBD
+Person 3: TBD
+
+
 Machine Player (Person 1):
 	Classes: MachinePlayer
 	Methods:
