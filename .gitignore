@@ -1,2 +1,5 @@
 /bin
 /src/*.class
+/src/board/*.class
+/src/player/*.class
+/src/list/*.class
