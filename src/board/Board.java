@@ -12,8 +12,8 @@ import list.LinkedList;
 public class Board {
 	
 	// Color representation
-	static final int BLACK = -1;
-	static final int WHITE = 1;
+	public static final int BLACK = -1;
+	public static final int WHITE = 1;
 	int numBlack;
 	int numWhite;
 	int[][] board;
@@ -263,15 +263,15 @@ public class Board {
 	public boolean isValidMove(Move m, int color) {
 		if (m.moveKind == Move.QUIT) {
 				return true;
-			}
-			if (m.moveKind == Move.ADD) {
-				return isValidAdd(m, color);
-			}
+		}
+		if (m.moveKind == Move.ADD) {
+			return isValidAdd(m, color);
+		}
 		return isValidStep(m, color);	
 	}
 	
 	/**
-	 * Provides a <code>LinkedList</code> of all the valide possible moves for
+	 * Provides a <code>LinkedList</code> of all the possible moves for
 	 * the given player.
 	 * 
 	 * @param color		color of the player
