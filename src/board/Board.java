@@ -69,7 +69,7 @@ public class Board {
 					str += " B |";
 				} else if (tile == WHITE) {
 					str += " W |";
-				} else if (isCorner(x, y)) {
+				} else if (inCorner(x, y)) {
 					str += " X |";
 				} else {
 					str += "   |";
@@ -110,82 +110,6 @@ public class Board {
 		} else {
 			numBlack++;
 		}
-	}
-
-
-	private boolean isOccupied(int x, int y) {
-		// Checks if there is already a piece on the tile x,y.
-		return board[y][x] != 0;
-	}
-
-	private boolean isCorner(int x, int y) {
-		// Checks if the tile is in a corner.
-		return ((x == 0 || x == 7) && (y == 0 || y == 7));
-	}
-
-	private boolean inGoal(int x, int y, int color) {
-		// Checks if the tile is in the goal of color.
-		if (color == BLACK) {
-			return ((y == 0 || y == 7)) && !isCorner(x, y);
-		}
-		return ((x == 0 || x == 7) && !isCorner(x, y));
-	}
-
-
-	private boolean legalPlacement(int x, int y, int color) {
-		//Combines the checks that are in common for both step moves and add moves
-		return (!(isOccupied(x, y)) &&
-				!(isCorner(x, y)) &&
-				!(inGoal(x, y, -color)));
-	}
-
-	private boolean hasNeighbor(int x, int y, int color) {
-		//Returns true if there is at least one tile of color that is 
-		//adjacent to tile at (x, y)
-		for (int j = Math.max(0, y - 1); j <= Math.min(7, y + 1); j++) {
-			for (int i = Math.max(0, x - 1); i <= Math.min(7, x + 1); i++) {
-				if (board[j][i] == color) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean threeInARow(int x, int y, int color) {
-		//Checks if placing a piece of a particular color on the square x,y will cause a three-in-a-row
-		int numAdjacent = 0;
-		for (int j = Math.max(0, y - 1); j <= Math.min(7, y + 1); j++) {
-			for (int i = Math.max(0, x - 1); i <= Math.min(7, x + 1); i++) {
-				if (!((i == x) && (j == y)) && board[j][i] == color) {
-					numAdjacent ++;
-					if (numAdjacent > 1) {
-						return true;
-					}
-					if (hasNeighbor(i, j, color)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean isValidAdd(Move m, int color) {
-		return ((getNumPieces(color) < 10) &&
-				(legalPlacement(m.x1, m.y1, color)) &&
-				!(threeInARow(m.x1, m.y1, color)));
-	}
-
-	private boolean isValidStep(Move m, int color) {
-		boolean threeInRow;
-		int pieceToMove = board[m.y2][m.x2];
-		board[m.y2][m.x2] = 0;
-		threeInRow = threeInARow(m.x1, m.y1, color);
-		board[m.y2][m.x2] = pieceToMove;
-		return ((getNumPieces(color) == 10) &&
-				(legalPlacement(m.x1, m.y1, color)) &&
-				!threeInRow);
 	}
 		
 	
@@ -269,6 +193,89 @@ public class Board {
 		}
 		return isValidStep(m, color);	
 	}
+
+	/**
+	* PRIVATE METHODS TO ASSIST isValidMove
+	* The names are fairly self-explanatory
+	*/
+
+	private boolean isOccupied(int x, int y) {
+		return board[y][x] != 0;
+	}
+
+	private boolean inCorner(int x, int y) {
+		return (((x == 0) || (x == 7)) && ((y == 0) || (y == 7)));
+	}
+
+	private boolean inGoal(int x, int y, int color) {
+		if (color == BLACK) {
+			return ((y == 0 || y == 7) && !(inCorner(x, y)));
+		}
+		return ((x == 0 || x == 7) && !(inCorner(x, y)));
+	}
+
+	private boolean canMoveFrom(int x, int y, int color) {
+		return board[y][x] == color;
+	}
+
+
+	private boolean hasNeighbor(int x, int y, int color) {
+		for (int j = Math.max(0, y - 1); j <= Math.min(7, y + 1); j++) {
+			for (int i = Math.max(0, x - 1); i <= Math.min(7, x + 1); i++) {
+				if (!((i == x) && (j == y)) && board[j][i] == color) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean threeInARow(int x, int y, int color) {
+		int numAdj = 0;
+		for (int j = Math.max(0, y - 1); j <= Math.min(7, y + 1); j++) {
+			for (int i = Math.max(0, x - 1); i <= Math.min(7, x + 1); i++) {
+				if (!(i == x && j == y) && (board[j][i] == color)) {
+					if (hasNeighbor(i, j, color)) {
+						return true;
+					}
+					numAdj++;				
+				}
+			}
+		}
+		return (numAdj > 1);
+	}
+
+	/**
+	* isValidStep checks for a valid step move
+	* it has to temporarily remove the piece to accurately check for 
+	* validity
+	*/
+
+	private boolean isValidStep(Move m, int color) {
+		if (!(getNumPieces(color) == 10)
+			|| !(canMoveFrom(m.x2, m.y2, color))
+			|| inCorner(m.x1, m.y1)
+			|| inGoal(m.x1, m.y1, -color)
+			|| isOccupied(m.x1, m.y1)) {
+			return false;
+		}
+		board[m.y2][m.x2] = 0; // Temporarily removes the piece from the place it is moving from
+		boolean threeInARow = threeInARow(m.x1, m.y1, color);
+		board[m.y2][m.x2] = color; //Sets it back
+		return !threeInARow;
+	}
+
+	/**
+	* isValidAdd checks for a valid add move
+	*/
+
+	private boolean isValidAdd(Move m, int color) {
+		return ((getNumPieces(color) < 10)
+				&& !(isOccupied(m.x1, m.y1))
+				&& !(inCorner(m.x1, m.y1))
+				&& !(inGoal(m.x1, m.y1, -color))
+				&& !(threeInARow(m.x1, m.y1, color)));
+	}
 	
 	/**
 	 * Provides a <code>LinkedList</code> of all the possible moves for
@@ -277,6 +284,17 @@ public class Board {
 	 * @param color		color of the player
 	 * @return	a list of all the valid moves
 	 */
+
+	public LinkedList<Move> getValidMoves(int color) {
+		if (getNumPieces(color) < 10) {
+			return getValidAdd(color);
+		}
+		return getValidStep(color);
+	}
+
+	/**
+	* PRIVATE METHODS TO ASSIST getValidMoves
+	*/
 
 	private LinkedList<Move> getValidAdd(int color) {
 		// Returns a list of all valid add moves on the current board
@@ -325,13 +343,6 @@ public class Board {
 		return moves;
 	}
 
-	public LinkedList<Move> getValidMoves(int color) {
-		if (getNumPieces(color) < 10) {
-			return getValidAdd(color);
-		}
-		return getValidStep(color);
-	}
-
 	public static void main(String[] args) {
 		Board b = new Board();
 		System.out.println(b);
@@ -350,10 +361,10 @@ public class Board {
 		Board b2 = new Board(arr);
 		System.out.println(b2);
 
-		System.out.println("Squares (0, 0), (7, 0), (0, 7) and (7, 7) are all corners: " + b2.isCorner(0, 0) + ", " +  
-																						   b2.isCorner(7, 0) + ", " +
-																						   b2.isCorner(0, 7) + ", " + 
-																						   b2.isCorner(7, 0));
+		System.out.println("Squares (0, 0), (7, 0), (0, 7) and (7, 7) are all corners: " + b2.inCorner(0, 0) + ", " +  
+																						   b2.inCorner(7, 0) + ", " +
+																						   b2.inCorner(0, 7) + ", " + 
+																						   b2.inCorner(7, 0));
 
 		System.out.println("Square (3, 1) is occupied, should be true: " + b2.isOccupied(3, 1));
 		System.out.println("Square (5, 5) is not occupied, should be false: " + b2.isOccupied(5, 5));
@@ -364,7 +375,7 @@ public class Board {
 		System.out.println("Square (5, 0) is not in the white goal, should be false: " + b2.inGoal(5, 0, WHITE));
 
 		System.out.println("The number of black pieces is 5: " + b2.getNumPieces(BLACK));
-		System.out.println("The number of white pieces is 6: " + b2.getNumPieces(WHITE));
+		System.out.println("The number of white pieces is 5: " + b2.getNumPieces(WHITE));
 
 		System.out.println("Square (4, 3) has a white neighbor, should be true: " + b2.hasNeighbor(4, 3, WHITE));
 		System.out.println("Square (4, 3) does not have a black neighbor, should be false: " + b2.hasNeighbor(4, 3, BLACK));
@@ -413,9 +424,16 @@ public class Board {
 		System.out.println("Moving white piece at (3, 3) to (5, 1) is valid, should be true:  " + b2.isValidMove(new Move(5, 1, 3, 3), WHITE));
 		System.out.println("Testing tricky three-in-a-rows:");
 		System.out.println("Moving black piece at (1, 2) to (1, 1) is valid, should be true:  " + b2.isValidMove(new Move(1, 1, 1, 2), BLACK));
+		System.out.println("Moving white piece at (3, 1) to (3, 2) is valid, should be true:  " + b2.isValidMove(new Move(3, 2, 3, 1), WHITE));
+		System.out.println("Moving white piece at (3, 1) to (5, 1) is valid, should be true:  " + b2.isValidMove(new Move(5, 1, 3, 1), WHITE));
+		System.out.println("Moving white piece at (3, 3) to (4, 4) is not valid, should be false:  " + b2.isValidMove(new Move(4, 4, 3, 3), WHITE));
+		System.out.println("Moving black piece at (6, 3) to (4, 6) is valid, should be true:  " + b2.isValidMove(new Move(4, 6, 6, 3), BLACK));
+		System.out.println("Moving white piece at (3, 1) to (3, 2) is valid, should be true:  " + b2.isValidMove(new Move(1, 1, 1, 2), WHITE));
+		System.out.println("Moving white piece at (3, 1) to (3, 2) is valid, should be true:  " + b2.isValidMove(new Move(1, 1, 1, 2), WHITE));
+		System.out.println("Moving white piece at (3, 1) to (3, 2) is valid, should be true:  " + b2.isValidMove(new Move(1, 1, 1, 2), WHITE));
 		System.out.println("Moving white piece at (3, 1) to (3, 2) is valid, should be true:  " + b2.isValidMove(new Move(1, 1, 1, 2), WHITE));
 
-		System.out.println("Moving black piece from (1, 4) to (2, 4) is not valid, should be false:  " + b2.isValidMove(new Move(2, 4, 1, 4), BLACK));
+		System.out.println("Moving black piece from (1, 4) to (2, 4) is valid, should be true:  " + b2.isValidMove(new Move(2, 4, 1, 4), BLACK));
 		System.out.println("Moving white piece from (5, 5) to (5, 7) is not valid, should be false:  " + b2.isValidMove(new Move(5, 7, 5, 5), WHITE));
 		System.out.println("No black piece at (4, 4), cannot move it, should be false:  " + b2.isValidMove(new Move(1, 1, 4, 4), BLACK));
 		System.out.println("No black piece at (3, 6), cannot move it, should be false:  " + b2.isValidMove(new Move(1, 1, 3, 6), BLACK));
