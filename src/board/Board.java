@@ -277,8 +277,59 @@ public class Board {
 	 * @param color		color of the player
 	 * @return	a list of all the valid moves
 	 */
+
+	private LinkedList<Move> getValidAdd(int color) {
+		// Returns a list of all valid add moves on the current board
+		LinkedList<Move> moves = new LinkedList<Move>();
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				Move m = new Move(x, y);
+				if (isValidAdd(m, color)) {
+					moves.add(m);
+				}
+			}
+		}
+		return moves;
+	}
+
+	private LinkedList<Integer> listOfPieces(int color) {
+		//Returns a list of coordinates containing a piece of this color
+		//coordinates are represented here as a 2-digit number (x, y) --> (x*10 + y)
+		LinkedList<Integer> coords = new LinkedList<Integer>();
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				if (board[y][x] == color) {
+					coords.add(new Integer(10*x + y));
+				}
+			}
+		}
+		return coords;
+	}
+
+	private LinkedList<Move> getValidStep(int color) {
+		// Returns a list of all valid step moves on the current board
+		LinkedList<Integer> stepFrom = listOfPieces(color);
+		LinkedList<Move> moves = new LinkedList<Move>();
+		for (int orig: stepFrom) {
+			int x = orig/10;
+			int y = orig%10;
+			for (int j = 0; j < 8; j++) {
+				for (int i = 0; i < 8; i++) {
+					Move m = new Move(i, j, x, y);
+					if (isValidStep(m, color)) {
+						moves.add(m);
+					}
+				}
+			}
+		}
+		return moves;
+	}
+
 	public LinkedList<Move> getValidMoves(int color) {
-		return null;
+		if (getNumPieces(color) < 10) {
+			return getValidAdd(color);
+		}
+		return getValidStep(color);
 	}
 
 	public static void main(String[] args) {
@@ -341,6 +392,9 @@ public class Board {
 		System.out.println("Trying to move the black piece at (5, 0) somewhere else is not valid, should be false: " + b2.isValidMove(new Move(5, 5, 5, 0), BLACK));
 		System.out.println("Trying to move the white piece at (1, 3) somewhere else is not valid, should be false: " + b2.isValidMove(new Move(5, 5, 1, 3), BLACK));
 
+		System.out.println("List of all valid moves for white: " + b2.getValidMoves(WHITE));
+		System.out.println("List of all valid moves for black: " + b2.getValidMoves(BLACK));
+
 		b2.makeMove(new Move(5, 5), WHITE);
 		b2.makeMove(new Move(3, 4), BLACK);
 		b2.makeMove(new Move(3, 6), WHITE);
@@ -368,6 +422,9 @@ public class Board {
 		System.out.println("No white piece at (4, 1), cannot move it, should be false:  " + b2.isValidMove(new Move(5, 1, 4, 1), WHITE));
 		System.out.println("Cannot move white piece at (3, 3) back to (3, 3), should be false:  " + b2.isValidMove(new Move(3, 3, 3, 3), WHITE));
 		System.out.println("Cannot move black piece at (1, 2) back to (1, 2), should be false:  " + b2.isValidMove(new Move(1, 2, 1, 2), BLACK));
+
+		System.out.println("List of all valid moves for white: " + b2.getValidMoves(WHITE));
+		System.out.println("List of all valid moves for black: " + b2.getValidMoves(BLACK));
 
 		b2.makeMove(new Move(1, 1, 1, 2), BLACK);
 		System.out.println("Move black piece from (1, 2) to (1, 1): " + b2);
