@@ -51,6 +51,14 @@ class NetworkHandler {
 	{
 		NetworkHandler n = new NetworkHandler();
 		System.out.println(n);
+		n.makeMove(new Move(1, 1), Board.WHITE);
+		System.out.println("Added white piece to 1, 1: \n" + n);
+		n.makeMove(new Move(3, 3), Board.WHITE);
+		System.out.println("Added white piece to 3, 3: \n" + n);
+		System.out.println("The list of white locations: " + n.whiteIndices);
+		System.out.println("The white piece at (1, 1) should have a neighbor at the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a neighbor at the top left: \n" + n.pieces[33]);
+
 	}
 
 	public String toString() {
@@ -355,5 +363,36 @@ class GamePiece
 		if(other==null)
 			return Integer.MAX_VALUE;
 		return Math.abs(this.row+this.col-other.row-other.col);
+	}
+	public String toString() {
+		String str = "";
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				if (x == 1 && y == 1) {
+					if (color == Board.WHITE) {
+						str += " W ";
+					} else if (color == Board.BLACK) {
+						str += " B ";
+					} else {
+						str += "   ";
+					}
+
+				}
+				else {
+					GamePiece neighbor = pointers[y][x];
+					if (neighbor == null) {
+						str += "   ";
+					} else if (neighbor.color == Board.BLACK) {
+						str += " B ";
+					} else if (neighbor.color == Board.WHITE) {
+						str += " W ";
+					}
+				}
+				if (x == 2) {
+					str += "\n";
+				}
+			}
+		}
+		return str;
 	}
 }
