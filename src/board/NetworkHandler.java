@@ -23,14 +23,15 @@ class NetworkHandler {
 	{
 		blackIndices = new LinkedList<Integer>();
 		whiteIndices= new LinkedList<Integer>();
-		pieces = new GamePiece[76];
-		for(int i = 0; i<76; i++)
+		pieces = new GamePiece[77];
+		for(int i = 0; i<=76; i++)
 		{
 			GamePiece newPiece = new GamePiece(i/10, i%10, 0);
 			pieces[i] = newPiece;
 		}
 
 	}
+
 	//***************************************************************
 	//*PRETEND THAT X IS ROW AND Y IS COLUMN						*
 	//*IT IS NOT TECHNICALLY CORRECT IN TRADITIONAL THINKING		*
@@ -48,6 +49,35 @@ class NetworkHandler {
 	 */
 	public static void main (String [] args)
 	{
+		NetworkHandler n = new NetworkHandler();
+		System.out.println(n);
+	}
+
+	public String toString() {
+		String str = "";
+		for (int i = 0; i <= 76; i++) {
+			int x = i%10;
+			int y = i/10;
+			if (x < 8 && y < 8) {
+				GamePiece piece = pieces[i];
+				if (x == 0) {
+					str += " --- --- --- --- --- --- --- ---\n|";
+				}
+				if (piece.color == Board.BLACK) {
+					str += " B |";
+				}
+				if (piece.color == Board.WHITE) {
+					str += " W |";
+				}
+				else {
+					str += "   |";
+				}
+				if (x == 7) {
+					str += "\n";
+				}
+ 			}
+		}
+		return str + "   |\n --- --- --- --- --- --- --- ---";
 
 	}
 	//***************************************************************
@@ -65,13 +95,13 @@ class NetworkHandler {
 		if(color==Board.BLACK)
 		{
 			if(row ==0) return -1;
-			if (row==8) return 1;
+			if (row==7) return 1;
 			return 0;
 		}
 		else if (color == Board.WHITE)
 		{
 			if (col ==0) return -1;
-			if (col==8) return 1;
+			if (col==7) return 1;
 			return 0;
 		}
 		return 0;
