@@ -77,6 +77,10 @@ class NetworkHandler {
 		n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
 		System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
 		System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
+		System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
+		System.out.println("Seems not.");
+		System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
+		System.out.println("Seems not.");
 
 	}
 
