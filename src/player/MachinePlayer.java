@@ -1,7 +1,7 @@
 package player;
 
 import board.Board;
-
+import list.LinkedList;
 /**
  *  An implementation of an automatic Network player.  Keeps track of moves
  *  made by both players.  Can select a move for itself.
@@ -35,8 +35,13 @@ public class MachinePlayer extends Player {
 	 * @param searchDepth	the maximum search depth for <code>chooseMove</code>
 	 */
 	public MachinePlayer(int color, int searchDepth) {
-		this.color = color;			
+		if (color == 0) {
+			this.color = Board.BLACK;
+		} else {
+			this.color = Board.WHITE;
+		}		
 		this.searchDepth = searchDepth;
+		this.board = new Board();
 	}
 
 	
@@ -148,9 +153,9 @@ public class MachinePlayer extends Player {
 	 * @return	reversed color
 	 */
 	private int oppositeColor(int color) {
-		if(color == Board.WHITE)
-			return Board.BLACK;
-		return Board.WHITE;
+		if(color == 0)
+			return Board.WHITE;
+		return Board.BLACK;
 	}
 
 }
