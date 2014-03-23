@@ -56,8 +56,27 @@ class NetworkHandler {
 		n.makeMove(new Move(3, 3), Board.WHITE);
 		System.out.println("Added white piece to 3, 3: \n" + n);
 		System.out.println("The list of white locations: " + n.whiteIndices);
-		System.out.println("The white piece at (1, 1) should have a neighbor at the bottom right: \n" + n.pieces[11]);
-		System.out.println("The white piece at (3, 3) should have a neighbor at the top left: \n" + n.pieces[33]);
+		System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
+		n.makeMove(new Move(2, 2), Board.BLACK);
+		System.out.println("Added a new black piece in between the two: \n" + n);
+		System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
+		System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
+		n.makeMove(new Move(1, 3, 2, 2), Board.BLACK);
+		System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
+		System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
+		System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
+		n.makeMove(new Move(1, 3, 2, 1), Board.BLACK);
+		System.out.println("Trying to move to (1, 3) again: \n" + n);
+		n.makeMove(new Move(5, 3, 3, 3), Board.WHITE);
+		System.out.println("Didn't move anywhere.");
+		System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
+		System.out.println("Moved down two instead");
+		n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
+		System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
+		System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
 
 	}
 
