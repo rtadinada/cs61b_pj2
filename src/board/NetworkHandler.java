@@ -16,13 +16,20 @@ class NetworkHandler {
 	/**
 	 * Creates a new empty NetworkHandler.
 	 */
-	LinkedList<GamePiece> blackPieces;
-	LinkedList<GamePiece> whitePieces;
+	GamePiece [] pieces;
+	LinkedList<Integer> blackIndices;
+	LinkedList<Integer> whiteIndices;
 	NetworkHandler() 
 	{
-		blackPieces = new LinkedList<GamePiece>();
-		whitePieces = new LinkedList<GamePiece>();
-		
+		blackIndices = new LinkedList<Integer>();
+		whiteIndices= new LinkedList<Integer>();
+		pieces = new GamePiece[76];
+		for(int i = 0; i<76; i++)
+		{
+			GamePiece newPiece = new GamePiece(i/10, i%10, 0);
+			pieces[i] = newPiece;
+		}
+
 	}
 	//***************************************************************
 	//*PRETEND THAT X IS ROW AND Y IS COLUMN						*
@@ -41,7 +48,7 @@ class NetworkHandler {
 	 */
 	public static void main (String [] args)
 	{
-		
+
 	}
 	//***************************************************************
 	//*PRETEND THAT X IS ROW AND Y IS COLUMN						*
@@ -49,50 +56,78 @@ class NetworkHandler {
 	//*BUT OTHERWISE I WILL GET HELLA CONFUSED						*
 	//*LOVE, RHETT													*
 	//***************************************************************
+
+
+	//This method returns a -1 for start, 0 for not inGoal, and 1 for end
+	@SuppressWarnings("unused")
+	private int inGoal(int color, int row, int col)
+	{
+		if(color==Board.BLACK)
+		{
+			if(row ==0) return -1;
+			if (row==8) return 1;
+			return 0;
+		}
+		else if (color == Board.WHITE)
+		{
+			if (col ==0) return -1;
+			if (col==8) return 1;
+			return 0;
+		}
+		return 0;
+	}
 	void makeMove(Move m, int color) 
 	{
 		if(m.moveKind == Move.ADD)
 		{
-			GamePiece added = new GamePiece(m.x1, m.x2, color);
+			Integer ind = m.x1*10+m.y1;
+			pieces[ind].color = color;
 			if(color==(Board.BLACK))
-				blackPieces.add(added);
+			{
+				blackIndices.add(ind);
+			}
 			else if(color==(Board.WHITE))
-				whitePieces.add(added);
+			{
+				whiteIndices.add(ind);
+			}
 			else
 				System.out.println("Neither black nor white: Whassup?");
-			addPiece(added);
+
+			addPiece(pieces[ind]);
 		}
 		else if(m.moveKind == Move.STEP)
 		{
 			//Delete the previous pointers!!!
 			int oldx = m.x2;
 			int oldy = m.y2;
-			GamePiece toMove = null;
+			int ind = oldx*10+oldy;
+			pieces[ind].color=0;
 			if(color==(Board.BLACK))
 			{
-				Iterator<GamePiece> blackIterator = blackPieces.iterator();
+				Iterator<Integer> blackIterator = blackIndices.iterator();
 				while(blackIterator.hasNext())
 				{
-					toMove = blackIterator.next();
-					if(toMove.row == oldx&&toMove.col ==oldy)
+					Integer toRem = blackIterator.next();
+					if(toRem==ind)
 					{ blackIterator.remove(); //Pulls the old piece out; it get put back in recursively
-						break;
+					break;
 					}
 				}
 			}
 			else if(color == Board.WHITE)
 			{
-				Iterator<GamePiece> whiteIterator = whitePieces.iterator();
+				Iterator<Integer> whiteIterator = whiteIndices.iterator();
 				while(whiteIterator.hasNext())
 				{
-					toMove = whiteIterator.next();
-					if(toMove.row == oldx&&toMove.col ==oldy)
-					{
+					Integer toRem = whiteIterator.next();
+					if(toRem==ind)
+					{ 
 						whiteIterator.remove(); //Pulls the old piece out; it get put back in recursively
 						break;
 					}
 				}
 			}
+			GamePiece toMove = pieces[ind];
 			for (int row = 0; row<3;row++)
 			{
 				for(int col = 0; col<3; col++)
@@ -109,27 +144,66 @@ class NetworkHandler {
 	}
 	private void addPiece(GamePiece added)
 	{
-		Iterator<GamePiece> blackIterator = blackPieces.iterator();
+		Iterator<Integer> blackIterator = blackIndices.iterator();
 		while(blackIterator.hasNext())
 		{
-			GamePiece potentialNeighbor = blackIterator.next();
+			GamePiece potentialNeighbor = pieces[blackIterator.next()];
 			setNeighbors(added, potentialNeighbor);
 		}
-		Iterator<GamePiece> whiteIterator = whitePieces.iterator();
+		Iterator<Integer> whiteIterator = whiteIndices.iterator();
 		while(whiteIterator.hasNext())
 		{
-			GamePiece potentialNeighbor = whiteIterator.next();
+			GamePiece potentialNeighbor = pieces[whiteIterator.next()];
 			setNeighbors(added, potentialNeighbor);
 		}
 		for(int x = 0; x<3; x++)
+		{
 			for(int y = 0; y<3; y++)
 			{
 				GamePiece currNeighbor = added.pointers[x][y];
 				if(currNeighbor == null)
 					continue;
-				currNeighbor.pointers[2-x][2-y] = added;
+				currNeighbor.pointers[2-x][2-y] = added;				
+				//				if(currNeighbor.connectedEnd&&currNeighbor.color==added.color)
+				//					added.connectedEnd= true;
+				//				if (currNeighbor.connectedStart&&currNeighbor.color==added.color)
+				//					added.connectedStart = true;
 			}
+		}
+		//updateBooleans(added);
 	}
+	//	private void undoBooleans(GamePiece removed)
+	//	{
+	//		if(removed ==null||(removed.connectedEnd==false&&removed.connectedStart==false))
+	//			return;
+	//		for(int x = 0; x<3; x++)
+	//			for (int y = 0; y<3; y++)
+	//			{
+	//				GamePiece currNeighbor = removed.pointers[x][y];
+	//				if(currNeighbor)
+	//			}
+	//				
+	//	}
+	//	private void updateBooleans(GamePiece added)
+	//	{
+	//		if(added ==null)
+	//			return;
+	//		if(added.connectedStart||added.connectedEnd)
+	//		{
+	//			for(int x = 0; x<3; x++)
+	//			{
+	//				for(int y = 0; y<3; y++)
+	//				{
+	//					GamePiece currNeighbor = added.pointers[x][y];
+	//					if(currNeighbor == null||(added.connectedStart==currNeighbor.connectedStart&&added.connectedEnd==currNeighbor.connectedEnd))
+	//						continue;
+	//					currNeighbor.connectedEnd=added.connectedEnd;
+	//					currNeighbor.connectedStart=added.connectedStart;
+	//					updateBooleans(currNeighbor);
+	//				}
+	//			}
+	//		}
+	//	}
 	private void setNeighbors(GamePiece added, GamePiece potentialNeighbor)
 	{
 		int x = added.row;
@@ -137,25 +211,33 @@ class NetworkHandler {
 		int px = potentialNeighbor.row;
 		int py = potentialNeighbor.col;
 		if(px == x)
+		{
 			if (px<x &&added.distance(potentialNeighbor)<added.distance(added.pointers[1][0]))
 				added.pointers[1][0] = potentialNeighbor;
 			else if(px>x&&added.distance(potentialNeighbor)<added.distance(added.pointers[1][2]))
 				added.pointers[1][2]= potentialNeighbor;
-		if(py == y)
+		}
+		else if(py == y)
+		{
 			if(py<y&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][1]))
 				added.pointers[0][1]= potentialNeighbor;
 			else if (py>y&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][1]))
 				added.pointers[2][1] = potentialNeighbor;
-		if((py-y)/(px-x) == 1)
+		}
+		else if((py-y)/(px-x) == 1)
+		{
 			if(px<x&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][0]))
 				added.pointers[0][0]= potentialNeighbor;
 			else if(px>x&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][2]))
 				added.pointers[2][2] = potentialNeighbor;
-		if((py-y)/(px-x)==-1)
+		}
+		else if((py-y)/(px-x)==-1)
+		{
 			if(px<x&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][0]))
 				added.pointers[2][0] = potentialNeighbor;
 			else if(px>x&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][2]))
 				added.pointers[0][2] = potentialNeighbor;
+		}
 	}
 	/**
 	 * Updates the internal configuration to remove the specified move for the
@@ -165,10 +247,22 @@ class NetworkHandler {
 	 * @param m			Move to remove
 	 * @param color		color of the player who made the move
 	 */
-	void undoMove(Move m, int color) {
-		
+	void undoMove(Move m, int color) 
+	{
+		if(m.moveKind==Move.ADD)
+		{
+			if(color == Board.BLACK)
+				blackIndices.remove(0);//It's assumed that m was the last move
+			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
+				whiteIndices.remove(0);//Most to least recent
+		}
+		else if(m.moveKind==Move.STEP)
+		{
+			Move newMove = new Move(m.x2, m.y2, m.x1, m.y1);
+			makeMove(newMove, color);
+		}
 	}
-	
+
 	/**
 	 * Returns true if the player of the specified color has a fully formed
 	 * network (as defined in the README) and false otherwise.
@@ -179,7 +273,7 @@ class NetworkHandler {
 	boolean hasNetwork(int color) {
 		return false;
 	}
-	
+
 	/**
 	 * Returns a <code>LinkedList</code> of the sizes of all the subnetworks
 	 * for the specified color.
@@ -190,7 +284,7 @@ class NetworkHandler {
 	LinkedList<Integer> getNetworkSizes(int color) {
 		return null;
 	}
-	
+
 	/**
 	 * Returns the number of connections between two pieces of the specified
 	 * color on the board
@@ -198,16 +292,20 @@ class NetworkHandler {
 	 * @param color		color of the player
 	 * @return	the number of connections of the color color
 	 */
-	int getNumConnections(int color) {
+	int getNumConnections(int color) 
+	{
+
+
+
 		return -1;
 	}
-	
+
 }
 class GamePiece
 {
 	protected GamePiece [][] pointers;
-	protected boolean connectedStart;
-	protected boolean connectedEnd;
+	//	protected boolean connectedStart;
+	//	protected boolean connectedEnd;
 	protected int row;
 	protected int col;
 	protected int color;
@@ -229,4 +327,3 @@ class GamePiece
 		return Math.abs(this.row+this.col-other.row-other.col);
 	}
 }
-
