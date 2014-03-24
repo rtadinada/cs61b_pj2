@@ -82,6 +82,47 @@ class NetworkHandler {
 		System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
 		System.out.println("Seems not.");
 
+		/*
+		TESTS FOR hasNetwork:
+		*/
+
+		NetworkHandler n1 = new NetworkHandler();
+		n1.makeMove(new Move(1, 1), Board.WHITE);
+		n1.makeMove(new Move(3, 3), Board.WHITE);
+		n1.makeMove(new Move(3, 1), Board.WHITE);
+		n1.makeMove(new Move(5, 3), Board.WHITE);
+		n1.makeMove(new Move(0, 2), Board.WHITE);
+		n1.makeMove(new Move(7, 5), Board.WHITE);
+		System.out.println("Testing white networks: \n" + n1);
+		// System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
+		System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
+		System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
+		// System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
+		// System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
+		// System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
+
+
+		System.out.println("Testing row versus column major: ");
+		System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
+		System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
+		System.out.println("Printing out all neighbors of piece at (3, 1): ");
+		GamePiece g = n1.pieces[13];
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				if (g.pointers[y][x] == null) {
+					System.out.println("At (" + x + ", " + y + "): " + null);
+				} else {
+					System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
+				}
+					
+			}
+		}
+		System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
+		System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
+
+		System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
+
+
 	}
 
 	public String toString() {
@@ -141,7 +182,7 @@ class NetworkHandler {
 	{
 		if(m.moveKind == Move.ADD)
 		{
-			Integer ind = m.x1*10+m.y1;
+			Integer ind = m.y1*10+m.x1;
 			pieces[ind].color = color;
 			if(color==(Board.BLACK))
 			{
@@ -161,7 +202,7 @@ class NetworkHandler {
 			//Delete the previous pointers!!!
 			int oldx = m.x2;
 			int oldy = m.y2;
-			int ind = oldx*10+oldy;
+			int ind = oldy*10+oldx;
 			pieces[ind].color=0;
 			if(color==(Board.BLACK))
 			{
@@ -199,7 +240,7 @@ class NetworkHandler {
 					affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
 				}											//pointers of those it pointed to
 			}
-			Move nm = new Move(m.x1, m.x2);
+			Move nm = new Move(m.x1, m.y1);
 			makeMove(nm, color); // This will trigger the Add, rather than Step, functionality.
 		}
 	}
@@ -267,10 +308,10 @@ class NetworkHandler {
 	//	}
 	private void setNeighbors(GamePiece added, GamePiece potentialNeighbor)
 	{
-		int x = added.row;
-		int y = added.col;
-		int px = potentialNeighbor.row;
-		int py = potentialNeighbor.col;
+		int y = added.row;
+		int x = added.col;
+		int py = potentialNeighbor.row;
+		int px = potentialNeighbor.col;
 		if(px == x)
 		{
 			if (px<x &&added.distance(potentialNeighbor)<added.distance(added.pointers[1][0]))
@@ -332,8 +373,60 @@ class NetworkHandler {
 	 * @return	true if a network for the specified player exists, false otherwise
 	 */
 	boolean hasNetwork(int color) {
+		int start;
+		int step;
+		if (color == Board.BLACK) {
+			start = 10;
+			step = 10; //The black goals on the top are 10, 20,...70
+		} else {
+			start = 1;
+			step = 1; // The white goals on the left are 1, 2...7
+		}
+		for (int i = start; start <= start + step*7; start += step) {
+			GamePiece currPiece = pieces[i];
+			if (currPiece != null && currPiece.color == color) {
+				int distance = numToEndGoal(currPiece, 1, -1);
+				if (distance >= 6) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
+
+	/**
+	* Returns how many pieces it takes to connected the piece to the end.
+	*@param piece: the game piece we are checking from
+	*@param currDist: the length of the current path this piece is part of
+	*@param prevDirection: the direction you were going last time, represented as a number
+		* x + 3y - this gives a unique index for each of the pointer directions, 0 through 8
+	* IMPORTANT ASSSUMPTION: this will only ever be called on a piece in the color's starting goal, so 
+	* we can ignore other pieces in the start goal, since you can only have one piece per goal per network.
+	* This means we are essentially looking at the board with the first row and column erased
+	*/
+	private int numToEndGoal(GamePiece piece, int currDist, int prevDirection) {
+		if (inGoal(piece.color, piece.row, piece.col) == 1) {
+			return currDist;
+		}
+		piece.visited = true;
+		int currMax = -1;
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				if (prevDirection != x + 3*y) {
+					GamePiece neighbor = piece.pointers[y][x];
+					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) {
+						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y);
+						if (distFromNeighbor > currMax) {
+							currMax = distFromNeighbor;
+						}	
+					}	
+				}
+			}
+		}
+		piece.visited = false;
+		return currMax;	
+	}
+	
 
 	/**
 	 * Returns a <code>LinkedList</code> of the sizes of all the subnetworks
@@ -370,12 +463,14 @@ class GamePiece
 	protected int row;
 	protected int col;
 	protected int color;
+	protected boolean visited;
 	GamePiece(int r, int c, int colr)
 	{
 		row = r;
 		col = c;
 		color = colr;
 		pointers = new GamePiece[3][3];
+		visited = false;
 	}
 	GamePiece()
 	{
