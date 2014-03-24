@@ -125,6 +125,14 @@ public class Board {
 		if (lastMove.moveKind == Move.STEP) {
 			board[lastMove.y2][lastMove.x2] = board[lastMove.y1][lastMove.x1];
 		}
+		if (lastMove.moveKind == Move.ADD) {
+			int pieceColor = board[lastMove.y1][lastMove.x1];
+			if (pieceColor == BLACK) {
+				numBlack--;
+			} else {
+				numWhite--;
+			}
+		}
 		board[lastMove.y1][lastMove.x1] = 0;
 		moves.remove(moves.size() - 1);
 	}
