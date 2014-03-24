@@ -60,7 +60,9 @@ public class MachinePlayer extends Player {
 				maxDepth = 5;
 		}
 		
-		return chooseMove(maxDepth, color).move;
+		Move m = chooseMove(maxDepth, color).move;
+		board.makeMove(m, color);
+		return m;
 	}
 	
 	/**
