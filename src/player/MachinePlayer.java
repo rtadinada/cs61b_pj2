@@ -75,6 +75,8 @@ public class MachinePlayer extends Player {
 	private ScoreMove chooseMove(int depth, int color) {
 		Move bestMove = new Move();
 		int bestScore = Integer.MIN_VALUE;
+		LinkedList<Move> validMoves = board.getValidMoves(color);
+		System.out.println("Valid moves for this color are " + validMoves);
 		for(Move move : board.getValidMoves(color)) {
 			int moveScore = getScore(move, depth, color);
 			if(bestScore == Integer.MIN_VALUE || 
@@ -153,7 +155,7 @@ public class MachinePlayer extends Player {
 	 * @return	reversed color
 	 */
 	private int oppositeColor(int color) {
-		if(color == 0)
+		if(color == Board.BLACK)
 			return Board.WHITE;
 		return Board.BLACK;
 	}

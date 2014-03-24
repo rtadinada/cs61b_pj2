@@ -55,6 +55,7 @@ public class MachinePlayer extends Player {
 	public Move chooseMove() {
 		//An AI that plays randomly
 		LinkedList<Move> possibleMoves = board.getValidMoves(color);
+		System.out.println("Possible moves: " + possibleMoves);
 		int numMoves = possibleMoves.size();
 		int i = (int) (Math.random()*(numMoves));
 		Move m = possibleMoves.get(i);
