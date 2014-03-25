@@ -1,7 +1,7 @@
 package board;
 
 import player.Move;
-import list.LinkedList;
+import util.LinkedList;
 
 /**
  * The Board class holds the game state and provides useful information about

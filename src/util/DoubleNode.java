@@ -1,4 +1,4 @@
-package list;
+package util;
 
 /**
  * Representation of nodes.

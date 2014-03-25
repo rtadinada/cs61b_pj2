@@ -1,8 +1,8 @@
 package rand_AI;
 
 import board.Board;
-import list.LinkedList;
 import player.*;
+import util.LinkedList;
 /**
  *  An implementation of an automatic Network player.  Keeps track of moves
  *  made by both players.  Can select a move for itself.

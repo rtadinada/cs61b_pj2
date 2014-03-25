@@ -1,7 +1,7 @@
 package player;
 
+import util.LinkedList;
 import board.Board;
-import list.LinkedList;
 /**
  *  An implementation of an automatic Network player.  Keeps track of moves
  *  made by both players.  Can select a move for itself.
@@ -57,7 +57,7 @@ public class MachinePlayer extends Player {
 			if(board.getNumPieces(color) == 10)		// Step move
 				maxDepth = 3;
 			else									// Add move
-				maxDepth = 5;
+				maxDepth = 4;
 		}
 		
 		Move m = chooseMove(maxDepth, color).move;
@@ -77,8 +77,6 @@ public class MachinePlayer extends Player {
 	private ScoreMove chooseMove(int depth, int color) {
 		Move bestMove = new Move();
 		int bestScore = Integer.MIN_VALUE;
-		LinkedList<Move> validMoves = board.getValidMoves(color);
-		System.out.println("Valid moves for this color are " + validMoves);
 		for(Move move : board.getValidMoves(color)) {
 			int moveScore = getScore(move, depth, color);
 			if(bestScore == Integer.MIN_VALUE || 
