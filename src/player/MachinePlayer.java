@@ -57,7 +57,7 @@ public class MachinePlayer extends Player {
 			if(board.getNumPieces(color) == 10)		// Step move
 				maxDepth = 3;
 			else									// Add move
-				maxDepth = 5;
+				maxDepth = 4;
 		}
 		
 		Move m = chooseMove(maxDepth, color).move;
@@ -80,13 +80,17 @@ public class MachinePlayer extends Player {
 		int bestScore = Integer.MIN_VALUE;
 		for(Move move : board.getValidMoves(color)) {
 			int moveScore = getScore(move, depth, color);
+			//System.out.print("Best Score: " + bestScore + "\t" + move + "'s Score: " + moveScore);
 			if(bestScore == Integer.MIN_VALUE || 
 					(this.color == color && moveScore > bestScore) ||					// This player's move (max score)
 					(oppositeColor(this.color) == color && moveScore < bestScore)) {	// Other player's move (min score)
+				//System.out.print(" <------------ new best score");
 				bestMove = move;
 				bestScore = moveScore;
 			}
+			//System.out.println();
 		}
+		//System.out.println("The best move is " + bestMove + " with a score of " + bestScore + ".");
 		return new ScoreMove(bestScore, bestMove);
 	}
 	
@@ -108,10 +112,11 @@ public class MachinePlayer extends Player {
 			score = Scorer.MINSCORE;
 		else if(board.hasNetwork(this.color))
 			score = Scorer.MAXSCORE;
-		else if(depth == 0 || Scorer.hasScore(board))
+		else if(depth == 0 )//|| Scorer.hasScore(board, color))
 			score = Scorer.getScore(board, this.color);
 		else {
 			score = chooseMove(depth, oppositeColor(color)).score;
+			//Scorer.addScore(board, color, score);
 		}
 		
 		board.rollback();

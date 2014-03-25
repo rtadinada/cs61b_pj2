@@ -224,7 +224,6 @@ public class IntHashMap<K> {
 	@SuppressWarnings("unchecked")
 	private void checkLoadFactor() {
 		if((double)size / (double)array.length > loadFactor) {
-			System.out.println("Increased array size");
 			LinkedList<IntEntry>[] oldArray = array;
 			array = new LinkedList[array.length*2];
 			size = 0;
