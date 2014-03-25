@@ -57,10 +57,11 @@ public class MachinePlayer extends Player {
 			if(board.getNumPieces(color) == 10)		// Step move
 				maxDepth = 3;
 			else									// Add move
-				maxDepth = 4;
+				maxDepth = 5;
 		}
 		
 		Move m = chooseMove(maxDepth, color).move;
+		Scorer.clearCache();
 		board.makeMove(m, color);
 		return m;
 	}
@@ -107,7 +108,7 @@ public class MachinePlayer extends Player {
 			score = Scorer.MINSCORE;
 		else if(board.hasNetwork(this.color))
 			score = Scorer.MAXSCORE;
-		else if(depth == 0)
+		else if(depth == 0 || Scorer.hasScore(board))
 			score = Scorer.getScore(board, this.color);
 		else {
 			score = chooseMove(depth, oppositeColor(color)).score;
