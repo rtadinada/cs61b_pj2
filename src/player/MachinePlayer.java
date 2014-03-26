@@ -1,7 +1,7 @@
 package player;
 
+import util.LinkedList;
 import board.Board;
-import list.LinkedList;
 /**
  *  An implementation of an automatic Network player.  Keeps track of moves
  *  made by both players.  Can select a move for itself.
@@ -52,16 +52,19 @@ public class MachinePlayer extends Player {
 	 * @return	the Move chosen by this player
 	 */
 	public Move chooseMove() {
+		long start = System.currentTimeMillis();
 		int maxDepth = searchDepth;
 		if(maxDepth == VARDEPTH) {
-			if(board.getNumPieces(color) == 10)		// Step move
+			if(board.getNumPieces(color) > 8)		// Step move
 				maxDepth = 3;
 			else									// Add move
-				maxDepth = 5;
+				maxDepth = 4;
 		}
-		
-		Move m = chooseMove(maxDepth, color).move;
+		Move m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
+		Scorer.clearCache();
 		board.makeMove(m, color);
+		double seconds = (System.currentTimeMillis() - start)/1000d;
+		System.out.println("Move chosen in " + seconds + " seconds.");
 		return m;
 	}
 	
@@ -74,19 +77,28 @@ public class MachinePlayer extends Player {
 	 * @param color		the color whose score to maximize
 	 * @return	the highest scoring move and score
 	 */
-	private ScoreMove chooseMove(int depth, int color) {
+	private ScoreMove chooseMove(int depth, int color, int a, int b) {
 		Move bestMove = new Move();
-		int bestScore = Integer.MIN_VALUE;
-		LinkedList<Move> validMoves = board.getValidMoves(color);
-		System.out.println("Valid moves for this color are " + validMoves);
+		int bestScore = 0;
+		if(color == this.color)
+			bestScore = a;
+		else
+			bestScore = b;
+		
 		for(Move move : board.getValidMoves(color)) {
-			int moveScore = getScore(move, depth, color);
+			int moveScore = getScore(move, depth, color, a, b);
 			if(bestScore == Integer.MIN_VALUE || 
 					(this.color == color && moveScore > bestScore) ||					// This player's move (max score)
 					(oppositeColor(this.color) == color && moveScore < bestScore)) {	// Other player's move (min score)
 				bestMove = move;
 				bestScore = moveScore;
+				if(this.color == color)
+					a = moveScore;
+				else
+					b = moveScore;
 			}
+			if(a >= b)
+				break;
 		}
 		return new ScoreMove(bestScore, bestMove);
 	}
@@ -100,7 +112,7 @@ public class MachinePlayer extends Player {
 	 * @param color		the player who makes the move
 	 * @return	the score of the move
 	 */
-	private int getScore(Move m, int depth, int color) {
+	private int getScore(Move m, int depth, int color, int a, int b) {
 		board.makeMove(m, color);
 		depth--;
 		
@@ -109,10 +121,11 @@ public class MachinePlayer extends Player {
 			score = Scorer.MINSCORE;
 		else if(board.hasNetwork(this.color))
 			score = Scorer.MAXSCORE;
-		else if(depth == 0)
+		else if(depth == 0 )//|| Scorer.hasScore(board, color))
 			score = Scorer.getScore(board, this.color);
 		else {
-			score = chooseMove(depth, oppositeColor(color)).score;
+			score = chooseMove(depth, oppositeColor(color), a, b).score;
+			//Scorer.addScore(board, color, score);
 		}
 		
 		board.rollback();

@@ -3,7 +3,7 @@ package board;
 import java.util.Iterator;
 
 import player.Move;
-import list.LinkedList;
+import util.LinkedList;
 
 /**
  * The NetworkHandler class handles finding completed networks, partial

@@ -1,7 +1,7 @@
 package board;
 
 import player.Move;
-import list.LinkedList;
+import util.LinkedList;
 
 /**
  * The Board class holds the game state and provides useful information about
@@ -80,6 +80,26 @@ public class Board {
 		return str;
 	}
 	
+	public boolean equals(Object o) {
+		Board b = (Board)o;
+		for(int x = 0; x < 8; x++) {
+			for(int y = 0; y < 8; y++) {
+				if(board[y][x] != b.board[y][x])
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	public int hashCode() {
+		int hashCode = 0;
+		for(int x = 0; x < 8; x++) {
+			for(int y = 0; y < 8; y++)
+				hashCode += 3*hashCode + board[y][x] + 1;
+		}
+		return hashCode;
+	}
+	
 	/**
 	 * Updates the board's configuration with the supplied move made by the
 	 * supplied color. Assumes that <code>m</code> is a valid move.
@@ -87,8 +107,6 @@ public class Board {
 	 * @param m			Move to update board with
 	 * @param color		color of the player who made the move
 	 */
-
-
 	public void makeMove(Move m, int color) {
 		if (m.moveKind == Move.QUIT) {
 			return;
@@ -148,6 +166,33 @@ public class Board {
 			return numBlack;
 		}
 		return numWhite;
+	}
+	
+	/**
+	 * Returns the number of pieces in the goal of the given color.
+	 * 
+	 * @param color		color to get number for
+	 * @return	number of pieces in goal row/column
+	 */
+	public int getNumGoalPieces(int color) {
+		int num = 0;
+		if (color == BLACK) {
+			for(int x = 1; x < 7; x++) {
+				if(isOccupied(x, 0))
+					num++;
+				if(isOccupied(x, 7))
+					num++;
+			}
+		}
+		else {
+			for(int y = 1; y < 7; y++) {
+				if(isOccupied(0, y))
+					num++;
+				if(isOccupied(7, y))
+					num++;
+			}
+		}
+		return num;
 	}
 	
 	
