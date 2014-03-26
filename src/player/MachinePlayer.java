@@ -52,17 +52,19 @@ public class MachinePlayer extends Player {
 	 * @return	the Move chosen by this player
 	 */
 	public Move chooseMove() {
+		long start = System.currentTimeMillis();
 		int maxDepth = searchDepth;
 		if(maxDepth == VARDEPTH) {
-			if(board.getNumPieces(color) == 10)		// Step move
+			if(board.getNumPieces(color) > 8)		// Step move
 				maxDepth = 3;
 			else									// Add move
 				maxDepth = 4;
 		}
-		
-		Move m = chooseMove(maxDepth, color).move;
+		Move m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
 		Scorer.clearCache();
 		board.makeMove(m, color);
+		double seconds = (System.currentTimeMillis() - start)/1000d;
+		System.out.println("Move chosen in " + seconds + " seconds.");
 		return m;
 	}
 	
@@ -75,22 +77,29 @@ public class MachinePlayer extends Player {
 	 * @param color		the color whose score to maximize
 	 * @return	the highest scoring move and score
 	 */
-	private ScoreMove chooseMove(int depth, int color) {
+	private ScoreMove chooseMove(int depth, int color, int a, int b) {
 		Move bestMove = new Move();
-		int bestScore = Integer.MIN_VALUE;
+		int bestScore = 0;
+		if(color == this.color)
+			bestScore = a;
+		else
+			bestScore = b;
+		
 		for(Move move : board.getValidMoves(color)) {
-			int moveScore = getScore(move, depth, color);
-			//System.out.print("Best Score: " + bestScore + "\t" + move + "'s Score: " + moveScore);
+			int moveScore = getScore(move, depth, color, a, b);
 			if(bestScore == Integer.MIN_VALUE || 
 					(this.color == color && moveScore > bestScore) ||					// This player's move (max score)
 					(oppositeColor(this.color) == color && moveScore < bestScore)) {	// Other player's move (min score)
-				//System.out.print(" <------------ new best score");
 				bestMove = move;
 				bestScore = moveScore;
+				if(this.color == color)
+					a = moveScore;
+				else
+					b = moveScore;
 			}
-			//System.out.println();
+			if(a >= b)
+				break;
 		}
-		//System.out.println("The best move is " + bestMove + " with a score of " + bestScore + ".");
 		return new ScoreMove(bestScore, bestMove);
 	}
 	
@@ -103,7 +112,7 @@ public class MachinePlayer extends Player {
 	 * @param color		the player who makes the move
 	 * @return	the score of the move
 	 */
-	private int getScore(Move m, int depth, int color) {
+	private int getScore(Move m, int depth, int color, int a, int b) {
 		board.makeMove(m, color);
 		depth--;
 		
@@ -115,7 +124,7 @@ public class MachinePlayer extends Player {
 		else if(depth == 0 )//|| Scorer.hasScore(board, color))
 			score = Scorer.getScore(board, this.color);
 		else {
-			score = chooseMove(depth, oppositeColor(color)).score;
+			score = chooseMove(depth, oppositeColor(color), a, b).score;
 			//Scorer.addScore(board, color, score);
 		}
 		
