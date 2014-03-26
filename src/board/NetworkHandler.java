@@ -258,14 +258,14 @@ class NetworkHandler {
 			GamePiece potentialNeighbor = pieces[whiteIterator.next()];
 			setNeighbors(added, potentialNeighbor);
 		}
-		for(int x = 0; x<3; x++)
+		for(int row = 0; row<3; row++)
 		{
-			for(int y = 0; y<3; y++)
+			for(int col = 0; col<3; col++)
 			{
-				GamePiece currNeighbor = added.pointers[x][y];
+				GamePiece currNeighbor = added.pointers[row][col];
 				if(currNeighbor == null)
 					continue;
-				currNeighbor.pointers[2-x][2-y] = added;				
+				currNeighbor.pointers[2-row][2-col] = added;				
 				//				if(currNeighbor.connectedEnd&&currNeighbor.color==added.color)
 				//					added.connectedEnd= true;
 				//				if (currNeighbor.connectedStart&&currNeighbor.color==added.color)
@@ -308,36 +308,36 @@ class NetworkHandler {
 	//	}
 	private void setNeighbors(GamePiece added, GamePiece potentialNeighbor)
 	{
-		int y = added.row;
-		int x = added.col;
-		int py = potentialNeighbor.row;
-		int px = potentialNeighbor.col;
-		if(px == x)
+		int row = added.row;
+		int col = added.col;
+		int prow = potentialNeighbor.row;
+		int pcol = potentialNeighbor.col;
+		if(prow == row)
 		{
-			if (px<x &&added.distance(potentialNeighbor)<added.distance(added.pointers[1][0]))
+			if (pcol<col &&added.distance(potentialNeighbor)<added.distance(added.pointers[1][0]))
 				added.pointers[1][0] = potentialNeighbor;
-			else if(px>x&&added.distance(potentialNeighbor)<added.distance(added.pointers[1][2]))
+			else if(pcol>col&&added.distance(potentialNeighbor)<added.distance(added.pointers[1][2]))
 				added.pointers[1][2]= potentialNeighbor;
 		}
-		else if(py == y)
+		else if(pcol == col)
 		{
-			if(py<y&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][1]))
+			if(prow<row&added.distance(potentialNeighbor)<added.distance(added.pointers[0][1]))
 				added.pointers[0][1]= potentialNeighbor;
-			else if (py>y&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][1]))
+			else if (prow>row&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][1]))
 				added.pointers[2][1] = potentialNeighbor;
 		}
-		else if((py-y)/(px-x) == 1)
+		else if((prow-row)/(pcol-col) == 1)
 		{
-			if(px<x&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][0]))
+			if(pcol<col&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][0]))
 				added.pointers[0][0]= potentialNeighbor;
-			else if(px>x&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][2]))
+			else if(pcol>col&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][2]))
 				added.pointers[2][2] = potentialNeighbor;
 		}
-		else if((py-y)/(px-x)==-1)
+		else if((prow-row)/(pcol-col)==-1)
 		{
-			if(px<x&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][0]))
+			if(pcol<col&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][0]))
 				added.pointers[2][0] = potentialNeighbor;
-			else if(px>x&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][2]))
+			else if(pcol>col&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][2]))
 				added.pointers[0][2] = potentialNeighbor;
 		}
 	}
@@ -492,14 +492,14 @@ class GamePiece
 					} else if (color == Board.BLACK) {
 						str += " B ";
 					} else {
-						str += "   ";
+						str += " X ";
 					}
 
 				}
 				else {
 					GamePiece neighbor = pointers[y][x];
 					if (neighbor == null) {
-						str += "   ";
+						str += " X ";
 					} else if (neighbor.color == Board.BLACK) {
 						str += " B ";
 					} else if (neighbor.color == Board.WHITE) {
