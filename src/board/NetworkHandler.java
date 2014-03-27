@@ -94,12 +94,12 @@ class NetworkHandler {
 		n1.makeMove(new Move(0, 2), Board.WHITE);
 		n1.makeMove(new Move(7, 5), Board.WHITE);
 		System.out.println("Testing white networks: \n" + n1);
-		// System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
+		System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
 		System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
 		System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
-		// System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
-		// System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
-		// System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
+		System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
+		System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
+		System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
 
 
 		System.out.println("Testing row versus column major: ");
@@ -376,17 +376,18 @@ class NetworkHandler {
 		int start;
 		int step;
 		if (color == Board.BLACK) {
-			start = 10;
-			step = 10; //The black goals on the top are 10, 20,...70
-		} else {
 			start = 1;
-			step = 1; // The white goals on the left are 1, 2...7
+			step = 1; //The black goals on the top are 1, 2,...7
+		} else {
+			start = 10;
+			step = 10; // The white goals on the left are 10, 20...70
 		}
-		for (int i = start; start <= start + step*7; start += step) {
+		for (int i = start; i <= start + step*7; i += step) {
 			GamePiece currPiece = pieces[i];
+			System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
 			if (currPiece != null && currPiece.color == color) {
-				int distance = numToEndGoal(currPiece, 1, -1);
-				if (distance >= 6) {
+				int distance = numToEndGoal(currPiece, 1, -1, -1);
+				if (distance >= 5) {
 					return true;
 				}
 			}
@@ -400,29 +401,43 @@ class NetworkHandler {
 	*@param currDist: the length of the current path this piece is part of
 	*@param prevDirection: the direction you were going last time, represented as a number
 		* x + 3y - this gives a unique index for each of the pointer directions, 0 through 8
+	*@param fromDirection: the direction pointing piece to the neighbor that called the method on piece,
+	* so it avoids checking backwards
+	*
 	* IMPORTANT ASSSUMPTION: this will only ever be called on a piece in the color's starting goal, so 
 	* we can ignore other pieces in the start goal, since you can only have one piece per goal per network.
 	* This means we are essentially looking at the board with the first row and column erased
 	*/
-	private int numToEndGoal(GamePiece piece, int currDist, int prevDirection) {
+	private int numToEndGoal(GamePiece piece, int currDist, int prevDirection, int fromDirection) {
 		if (inGoal(piece.color, piece.row, piece.col) == 1) {
+			System.out.println("We've reached something on the end goal; return the distance built up so far: " + currDist);
 			return currDist;
 		}
 		piece.visited = true;
+		System.out.println("Just visited the piece at (" + piece.col + ", " + piece.row + "): " + piece.visited);
 		int currMax = -1;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				if (prevDirection != x + 3*y) {
+				if ((x + 3*y != prevDirection) && (x + 3*y != fromDirection)) {
+					System.out.println("Checking for neighbors in (" + x + ", " + y + ") direction: ");
 					GamePiece neighbor = piece.pointers[y][x];
 					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) {
-						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y);
+						System.out.println("The neighbor: \n" + neighbor);
+						System.out.println("It should not have been visited yet: " + neighbor.visited);
+						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));
+						System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
 						if (distFromNeighbor > currMax) {
+							System.out.println("This is larger than the longest distance we have so far, setting the currMax to this value.");
 							currMax = distFromNeighbor;
 						}	
+					}
+					else {
+						System.out.println("The neighbor: \n" + neighbor + "\nis nonexistent or the wrong color.");
 					}	
 				}
 			}
 		}
+		System.out.println("We've checked everything; this call is about to return: the maximum distance to the end goal from here is " + currMax);
 		piece.visited = false;
 		return currMax;	
 	}
@@ -476,12 +491,15 @@ class GamePiece
 	{
 		this(-1,-1,-1);
 	}
+
+
 	public int distance (GamePiece other)
 	{
 		if(other==null)
 			return Integer.MAX_VALUE;
 		return Math.abs(this.row+this.col-other.row-other.col);
 	}
+
 	public String toString() {
 		String str = "";
 		for (int y = 0; y < 3; y++) {
