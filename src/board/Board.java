@@ -18,6 +18,7 @@ public class Board {
 	int numWhite;
 	int[][] board;
 	LinkedList<Move> moves;
+	NetworkHandler networks = new NetworkHandler();
 
 	/**
 	 * Constructs an empty Board.
@@ -119,6 +120,7 @@ public class Board {
 			incNum(color);
 		}
 		moves.add(m);
+		networks.makeMove(m, color);
 	}
 
 	private void incNum(int color) {
@@ -140,11 +142,13 @@ public class Board {
 		if (lastMove.moveKind == Move.QUIT) {
 			return;
 		}
+		
+
+		int pieceColor = board[lastMove.y1][lastMove.x1];
 		if (lastMove.moveKind == Move.STEP) {
 			board[lastMove.y2][lastMove.x2] = board[lastMove.y1][lastMove.x1];
 		}
 		if (lastMove.moveKind == Move.ADD) {
-			int pieceColor = board[lastMove.y1][lastMove.x1];
 			if (pieceColor == BLACK) {
 				numBlack--;
 			} else {
@@ -153,6 +157,7 @@ public class Board {
 		}
 		board[lastMove.y1][lastMove.x1] = 0;
 		moves.remove(moves.size() - 1);
+		networks.undoMove(lastMove, pieceColor);
 	}
 	
 	/**
@@ -204,7 +209,7 @@ public class Board {
 	 * @return	true if a network for the specified player exists, false otherwise
 	 */
 	public boolean hasNetwork(int color) {
-		return false;
+		return networks.hasNetwork(color);
 	}
 	
 	/**

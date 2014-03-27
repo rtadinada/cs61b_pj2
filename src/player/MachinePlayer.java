@@ -117,10 +117,14 @@ public class MachinePlayer extends Player {
 		depth--;
 		
 		int score = 0;
-		if(board.hasNetwork(oppositeColor(this.color)))
+		if(board.hasNetwork(oppositeColor(this.color))) {
+			System.out.println("Found losing board <-----------------------\n" + board);
 			score = Scorer.MINSCORE;
-		else if(board.hasNetwork(this.color))
+		}
+		else if(board.hasNetwork(this.color)) {
+			System.out.println("Found winning board <-----------------------\n" + board);
 			score = Scorer.MAXSCORE;
+		}
 		else if(depth == 0 )//|| Scorer.hasScore(board, color))
 			score = Scorer.getScore(board, this.color);
 		else {
