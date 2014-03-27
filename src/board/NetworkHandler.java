@@ -123,6 +123,9 @@ class NetworkHandler {
 		System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
 
 
+
+
+
 	}
 
 	public String toString() {
@@ -382,7 +385,7 @@ class NetworkHandler {
 			start = 10;
 			step = 10; // The white goals on the left are 10, 20...70
 		}
-		for (int i = start; i <= start + step*7; i += step) {
+		for (int i = start; i <= step*7; i += step) {
 			GamePiece currPiece = pieces[i];
 			System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
 			if (currPiece != null && currPiece.color == color) {
