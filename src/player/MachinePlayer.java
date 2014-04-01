@@ -114,7 +114,7 @@ public class MachinePlayer extends Player {
 	 */
 	private int getScore(Move m, int depth, int color, int a, int b) {
 		board.makeMove(m, color);
-		depth--;
+		depth--;		
 		
 		int score = 0;
 		if(board.hasNetwork(oppositeColor(this.color))) {
@@ -123,13 +123,13 @@ public class MachinePlayer extends Player {
 		}
 		else if(board.hasNetwork(this.color)) {
 			System.out.println("Found winning board <-----------------------\n" + board);
-			score = Scorer.MAXSCORE;
+			score = Scorer.MAXSCORE+depth;
 		}
-		else if(depth == 0 )//|| Scorer.hasScore(board, color))
+		else if(depth == 0 || Scorer.hasScore(board, color))
 			score = Scorer.getScore(board, this.color);
 		else {
 			score = chooseMove(depth, oppositeColor(color), a, b).score;
-			//Scorer.addScore(board, color, score);
+			Scorer.addScore(board, color, score);
 		}
 		
 		board.rollback();
@@ -177,6 +177,25 @@ public class MachinePlayer extends Player {
 		if(color == Board.BLACK)
 			return Board.WHITE;
 		return Board.BLACK;
+	}
+	
+	public static void main(String[] args) {
+		MachinePlayer rhett = new MachinePlayer(0);
+		rhett.opponentMove(new Move(0, 1));
+		rhett.forceMove(new Move(1, 0));
+		rhett.opponentMove(new Move(0, 2));
+		rhett.forceMove(new Move(1, 1));
+		rhett.opponentMove(new Move(0, 4));
+		rhett.forceMove(new Move(3, 1));
+		rhett.opponentMove(new Move(0, 5));
+		rhett.forceMove(new Move(3, 4));
+		rhett.opponentMove(new Move(7, 1));
+		rhett.forceMove(new Move(1, 4));
+		rhett.opponentMove(new Move(7, 2));
+		rhett.forceMove(new Move(1, 7));
+		
+		System.out.println(rhett.board);
+		System.out.println(rhett.board.hasNetwork(Board.BLACK));
 	}
 
 }

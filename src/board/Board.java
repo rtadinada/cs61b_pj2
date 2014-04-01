@@ -174,30 +174,32 @@ public class Board {
 	}
 	
 	/**
-	 * Returns the number of pieces in the goal of the given color.
+	 * Returns the number of pieces in the goals of the given color minus half
+	 * the difference of goals pieces in the other side to promote symmetry.
 	 * 
 	 * @param color		color to get number for
 	 * @return	number of pieces in goal row/column
 	 */
 	public int getNumGoalPieces(int color) {
-		int num = 0;
+		int num1 = 0;
+		int num2 = 0;
 		if (color == BLACK) {
 			for(int x = 1; x < 7; x++) {
 				if(isOccupied(x, 0))
-					num++;
+					num1++;
 				if(isOccupied(x, 7))
-					num++;
+					num2++;
 			}
 		}
 		else {
 			for(int y = 1; y < 7; y++) {
 				if(isOccupied(0, y))
-					num++;
+					num1++;
 				if(isOccupied(7, y))
-					num++;
+					num2++;
 			}
 		}
-		return num;
+		return num1+num2 - (int)(0.5*Math.abs(num2-num1));
 	}
 	
 	
