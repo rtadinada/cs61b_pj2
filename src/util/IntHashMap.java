@@ -141,7 +141,7 @@ public class IntHashMap<K> {
 		int index = bucketIndex(key);
 		LinkedList<IntEntry> list = array[index];
 		if(list == null) {
-			list = new LinkedList<>();
+			list = new LinkedList<IntEntry>();
 			array[index] = list;
 		}
 		

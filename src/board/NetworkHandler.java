@@ -19,10 +19,12 @@ class NetworkHandler {
 	GamePiece [] pieces;
 	LinkedList<Integer> blackIndices;
 	LinkedList<Integer> whiteIndices;
+	LinkedList<Integer> networkSizes;
 	NetworkHandler() 
 	{
 		blackIndices = new LinkedList<Integer>();
 		whiteIndices= new LinkedList<Integer>();
+		networkSizes = null;
 		pieces = new GamePiece[77];
 		for(int i = 0; i<=76; i++)
 		{
@@ -387,7 +389,6 @@ class NetworkHandler {
 		}
 		for (int i = start; i <= step*7; i += step) {
 			GamePiece currPiece = pieces[i];
-			System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
 			if (currPiece != null && currPiece.color == color) {
 				int distance = numToEndGoal(currPiece, 1, -1, -1);
 				if (distance >= 5) {
@@ -428,6 +429,7 @@ class NetworkHandler {
 						System.out.println("The neighbor: \n" + neighbor);
 						System.out.println("It should not have been visited yet: " + neighbor.visited);
 						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));
+						networkSizes.add(distFromNeighbor);
 						System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
 						if (distFromNeighbor > currMax) {
 							System.out.println("This is larger than the longest distance we have so far, setting the currMax to this value.");
@@ -454,7 +456,7 @@ class NetworkHandler {
 	 * @return	a list of the sizes of all the subnetworks.
 	 */
 	LinkedList<Integer> getNetworkSizes(int color) {
-		return null;
+		return networkSizes;
 	}
 
 	/**

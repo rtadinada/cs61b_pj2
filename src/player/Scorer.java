@@ -15,7 +15,7 @@ class Scorer {
 	public static final int MAXSCORE = 1000;
 	public static final int MINSCORE = -1000;
 	
-	private static IntHashMap<BoardColor> scoreCache = new IntHashMap<>(1500);
+	private static IntHashMap<BoardColor> scoreCache = new IntHashMap<BoardColor>(1500);
 	
 	/**
 	 * Scores the specified board for the specified color and returns an int
@@ -48,7 +48,7 @@ class Scorer {
 	}
 	
 	static void clearCache() {
-		scoreCache = new IntHashMap<>(1500);
+		scoreCache = new IntHashMap<BoardColor>(1500);
 	}
 	
 	private static class BoardColor {
