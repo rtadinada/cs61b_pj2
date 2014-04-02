@@ -52,6 +52,8 @@ class NetworkHandler {
 	 */
 	public static void main (String [] args)
 	{
+		
+		/*
 		NetworkHandler n = new NetworkHandler();
 		System.out.println(n);
 		n.makeMove(new Move(1, 1), Board.WHITE);
@@ -85,9 +87,8 @@ class NetworkHandler {
 		System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
 		System.out.println("Seems not.");
 
-		/*
-		TESTS FOR hasNetwork:
-		*/
+		
+		//TESTS FOR hasNetwork:
 
 		NetworkHandler n1 = new NetworkHandler();
 		n1.makeMove(new Move(1, 1), Board.WHITE);
@@ -169,6 +170,13 @@ class NetworkHandler {
 		ravi.makeMove(new Move(4, 0), Board.BLACK);
 		System.out.println(ravi);
 		System.out.println("There is no black network: " + ravi.hasNetwork(Board.BLACK));
+		*/
+		
+		NetworkHandler test = new NetworkHandler();
+		test.makeMove(new Move(0, 1), Board.WHITE);
+		test.makeMove(new Move(1, 0), Board.BLACK);
+		test.undoMove(new Move(1, 0), Board.BLACK);
+		System.out.println(test);
 	}
 
 	public String toString() {
@@ -221,22 +229,18 @@ class NetworkHandler {
 		}
 		return 0;
 	}
-	void makeMove(Move m, int color) 
-	{
-		if(m.moveKind == Move.ADD)
-		{
+	
+	
+	void makeMove(Move m, int color) {
+		if(m.moveKind == Move.ADD) {
 			Integer ind = m.y1*10+m.x1;
 			pieces[ind].color = color;
-			if(color==(Board.BLACK))
-			{
+			if(color==(Board.BLACK)) {
 				blackIndices.add(ind);
 			}
-			else if(color==(Board.WHITE))
-			{
+			else {
 				whiteIndices.add(ind);
 			}
-			else
-				System.out.println("Neither black nor white: Whassup?");
 
 			addPiece(pieces[ind]);
 		}
@@ -246,92 +250,71 @@ class NetworkHandler {
 			int oldx = m.x2;
 			int oldy = m.y2;
 			int ind = oldy*10+oldx;
-			pieces[ind].color=0;
-			if(color==(Board.BLACK))
-			{
+			if(color==(Board.BLACK)) {
 				Iterator<Integer> blackIterator = blackIndices.iterator();
-				while(blackIterator.hasNext())
-				{
+				while(blackIterator.hasNext()) {
 					Integer toRem = blackIterator.next();
-					if(toRem==ind)
-					{ blackIterator.remove(); //Pulls the old piece out; it get put back in recursively
-					break;
+					if(toRem==ind){
+						blackIterator.remove(); //Pulls the old piece out; it get put back in recursively
+						break;
 					}
 				}
 			}
-			else if(color == Board.WHITE)
-			{
+			else if(color == Board.WHITE) {
 				Iterator<Integer> whiteIterator = whiteIndices.iterator();
-				while(whiteIterator.hasNext())
-				{
+				while(whiteIterator.hasNext()) {
 					Integer toRem = whiteIterator.next();
-					if(toRem==ind)
-					{ 
+					if(toRem==ind) { 
 						whiteIterator.remove(); //Pulls the old piece out; it get put back in recursively
 						break;
 					}
 				}
 			}
 			removePiece(ind);
-//			GamePiece toMove = pieces[ind];
-//			for (int row = 0; row<3;row++)
-//			{
-//				for(int col = 0; col<3; col++)
-//				{
-//					GamePiece affectedNeighbor = toMove.pointers[row][col];
-//					if(affectedNeighbor ==null)
-//						continue;
-//					affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
-//				}											//pointers of those it pointed to
-//			}
 			Move nm = new Move(m.x1, m.y1);
 			makeMove(nm, color); // This will trigger the Add, rather than Step, functionality.
 		}
 	}
+	
+	
 	private void removePiece(int ind)
 	{
 		GamePiece toMove = pieces[ind];
-		for (int row = 0; row<3;row++)
-		{
-			for(int col = 0; col<3; col++)
-			{
+		for (int row = 0; row<3;row++) {
+			for(int col = 0; col<3; col++) {
 				GamePiece affectedNeighbor = toMove.pointers[row][col];
-				if(affectedNeighbor ==null)
-					continue;
-				affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
-			}											//pointers of those it pointed to
+				if(affectedNeighbor != null) {
+					affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
+				}																			 //pointers of those it pointed to
+			}											
 		}
+		pieces[ind] = new GamePiece(ind%10, ind/10, 0);
 	}
-	private void addPiece(GamePiece added)
-	{
+	
+	private void addPiece(GamePiece added) {
 		Iterator<Integer> blackIterator = blackIndices.iterator();
-		while(blackIterator.hasNext())
-		{
+		while(blackIterator.hasNext()) {
 			GamePiece potentialNeighbor = pieces[blackIterator.next()];
 			setNeighbors(added, potentialNeighbor);
 		}
+		
 		Iterator<Integer> whiteIterator = whiteIndices.iterator();
-		while(whiteIterator.hasNext())
-		{
+		while(whiteIterator.hasNext()) {
 			GamePiece potentialNeighbor = pieces[whiteIterator.next()];
 			setNeighbors(added, potentialNeighbor);
 		}
-		for(int row = 0; row<3; row++)
-		{
-			for(int col = 0; col<3; col++)
-			{
+		
+		for(int row = 0; row<3; row++) {
+			for(int col = 0; col<3; col++) {
 				GamePiece currNeighbor = added.pointers[row][col];
-				if(currNeighbor == null)
-					continue;
-				currNeighbor.pointers[2-row][2-col] = added;				
-				//				if(currNeighbor.connectedEnd&&currNeighbor.color==added.color)
-				//					added.connectedEnd= true;
-				//				if (currNeighbor.connectedStart&&currNeighbor.color==added.color)
-				//					added.connectedStart = true;
+				if(currNeighbor != null)
+					currNeighbor.pointers[2-row][2-col] = added;
 			}
 		}
-		//updateBooleans(added);
+		
 	}
+	
+	
 	//	private void undoBooleans(GamePiece removed)
 	//	{
 	//		if(removed ==null||(removed.connectedEnd==false&&removed.connectedStart==false))
@@ -364,6 +347,8 @@ class NetworkHandler {
 	//			}
 	//		}
 	//	}
+	
+	
 	private void setNeighbors(GamePiece added, GamePiece potentialNeighbor)
 	{
 		int row = added.row;
@@ -409,20 +394,16 @@ class NetworkHandler {
 	 */
 	void undoMove(Move m, int color) 
 	{
-		if(m.moveKind==Move.ADD)
-		{
+		if(m.moveKind==Move.ADD) {
 			int index= 0;
 			if(color == Board.BLACK)
-				index = blackIndices.remove(0);//It's assumed that m was the last move8
-			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
-				index = whiteIndices.remove(0);//Most to least recent
-			// int i = m.x1*10 + m.y1;
-			// pieces[i] = new GamePiece();
+				index = blackIndices.remove(blackIndices.size()-1);		//It's assumed that m was the last move8
+			else if(color==Board.WHITE)									//The LLs are defacto sorted in order of
+				index = whiteIndices.remove(whiteIndices.size()-1);		//LEAST TO MOST RECENT (not most to least, this isn't a queue)
+			index = m.y1*10 + m.x1;
 			removePiece(index);
-			
 		}
-		else if(m.moveKind==Move.STEP)
-		{
+		else if(m.moveKind==Move.STEP) {
 			Move newMove = new Move(m.x2, m.y2, m.x1, m.y1);
 			makeMove(newMove, color);
 		}
