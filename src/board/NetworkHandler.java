@@ -13,14 +13,21 @@ import util.LinkedList;
  */
 class NetworkHandler {
 
-	/**
-	 * Creates a new empty NetworkHandler.
-	 */
+	
 	GamePiece [] pieces;
 	LinkedList<Integer> blackIndices;
 	LinkedList<Integer> whiteIndices;
 	LinkedList<Integer> networkSizes;
 
+	/**
+	 * Constructs a new NetworkHandler. 
+	 * Locations of pieces are stored as double-digit integers, 10*row + col. EG, (1,2) is stored as 21.
+	 * Pieces are created only once and then mutated 
+	 * 
+	 * @param blackIndices is a linkedList of all the indices on the board that currently have a black piece associated with them
+	 * @param whiteIndices is a linkedList of all the indices on the board that currently have a white piece associated with them
+	 * @param pieces is an array of GamePieces that are not created or destroyed except to clear their indices.
+	 */
 	NetworkHandler() 
 	{
 		blackIndices = new LinkedList<Integer>();
@@ -35,237 +42,225 @@ class NetworkHandler {
 
 	}
 
-	//***************************************************************
-	//*PRETEND THAT X IS ROW AND Y IS COLUMN						*
-	//*IT IS NOT TECHNICALLY CORRECT IN TRADITIONAL THINKING		*
-	//*BUT OTHERWISE I WILL GET HELLA CONFUSED						*
-	//*LOVE, RHETT													*
-	//***************************************************************
-	/**
-	 * Updates internal configuration with the specified move for the
-	 * specified color. Assumes that <code>m</code> is a valid move. Uses color
-	 * as specified in Board.WHITE and Board.BLACK (assume the same for other
-	 * methods).
-	 * 
-	 * @param m			Move to update with
-	 * @param color		color of the player who made the move
-	 */
+	
 	public static void main (String [] args)
 	{
 		
-		
-		// NetworkHandler n = new NetworkHandler();
-		// System.out.println(n);
-		// n.makeMove(new Move(1, 1), Board.WHITE);
-		// System.out.println("Added white piece to 1, 1: \n" + n);
-		// n.makeMove(new Move(3, 3), Board.WHITE);
-		// System.out.println("Added white piece to 3, 3: \n" + n);
-		// System.out.println("The list of white locations: " + n.whiteIndices);
-		// System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
-		// System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
-		// n.makeMove(new Move(2, 2), Board.BLACK);
-		// System.out.println("Added a new black piece in between the two: \n" + n);
-		// System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
-		// System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
-		// System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
-		// n.makeMove(new Move(1, 3, 2, 2), Board.BLACK);
-		// System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
-		// System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
-		// System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
-		// System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
-		// n.makeMove(new Move(1, 3, 2, 1), Board.BLACK);
-		// System.out.println("Trying to move to (1, 3) again: \n" + n);
-		// n.makeMove(new Move(5, 3, 3, 3), Board.WHITE);
-		// System.out.println("Didn't move anywhere.");
-		// System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
-		// System.out.println("Moved down two instead");
-		// n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
-		// System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
-		// System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
-		// System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
-		// System.out.println("Seems not.");
-		// System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
-		// System.out.println("Seems not.");
-
-		
-		// //TESTS FOR hasNetwork:
-
-		NetworkHandler n1 = new NetworkHandler();
-		n1.makeMove(new Move(1, 1), Board.WHITE);
-		n1.makeMove(new Move(3, 3), Board.WHITE);
-		n1.makeMove(new Move(3, 1), Board.WHITE);
-		n1.makeMove(new Move(5, 3), Board.WHITE);
-		n1.makeMove(new Move(0, 2), Board.WHITE);
-		n1.makeMove(new Move(7, 5), Board.WHITE);
-		System.out.println("Testing white networks: \n" + n1);
-		// System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
-		// System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
-		// System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
-		// System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
-		// System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
-		// System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
-
-
-		// System.out.println("Testing row versus column major: ");
-		// System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
-		// System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
-		// System.out.println("Printing out all neighbors of piece at (3, 1): ");
-		// GamePiece g = n1.pieces[13];
-		// for (int y = 0; y < 3; y++) {
-		// 	for (int x = 0; x < 3; x++) {
-		// 		if (g.pointers[y][x] == null) {
-		// 			System.out.println("At (" + x + ", " + y + "): " + null);
-		// 		} else {
-		// 			System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
-		// 		}
-					
-		// 	}
-		// }
-		// System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
-		// System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
-
-		System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
-
-		NetworkHandler rhett = new NetworkHandler();
-		rhett.makeMove(new Move(0, 1), Board.WHITE);
-		rhett.makeMove(new Move(1, 0), Board.BLACK);
-		rhett.makeMove(new Move(0, 2), Board.WHITE);
-		rhett.makeMove(new Move(1, 1), Board.BLACK);
-		rhett.makeMove(new Move(0, 4), Board.WHITE);
-		rhett.makeMove(new Move(3, 1), Board.BLACK);
-		rhett.makeMove(new Move(0, 5), Board.WHITE);
-		rhett.makeMove(new Move(3, 4), Board.BLACK);
-		rhett.makeMove(new Move(7, 1), Board.WHITE);
-		rhett.makeMove(new Move(1, 4), Board.BLACK);
-		rhett.makeMove(new Move(7, 2), Board.WHITE);
-		rhett.makeMove(new Move(1, 7), Board.BLACK);
-		
-		System.out.println(rhett);
-		System.out.println("Printing out black piece at (1, 0) \n" + rhett.pieces[10]);
-		System.out.println("Printing out black piece at (1, 1) \n" + rhett.pieces[11]);
-		System.out.println("Printing out black piece at (3, 1) \n" + rhett.pieces[31]);
-		System.out.println("Printing out black piece at (3, 4) \n" + rhett.pieces[34]);
-		System.out.println("Printing out black piece at (1, 4) \n" + rhett.pieces[14]);
-		System.out.println("Printing out black piece at (1, 7) \n" + rhett.pieces[17]);
-		System.out.println("There should be a black network \n" + rhett.hasNetwork(Board.BLACK));
-
-
-		NetworkHandler ajeya = new NetworkHandler();
-		ajeya.makeMove(new Move(0, 1), Board.WHITE);
-		ajeya.makeMove(new Move(1, 0), Board.BLACK);
-		ajeya.makeMove(new Move(1, 3), Board.WHITE);
-		System.out.println("Board: \n" + ajeya);
-		System.out.println("There is no white network: " + ajeya.hasNetwork(Board.WHITE));
-		System.out.println("Connection list: " + ajeya.getNetworkSizes(Board.WHITE));
-
-		NetworkHandler ravi = new NetworkHandler();
-		ravi.makeMove(new Move(1, 2), Board.BLACK);
-		ravi.makeMove(new Move(2, 2), Board.BLACK);
-		ravi.makeMove(new Move(4, 2), Board.BLACK);
-		ravi.makeMove(new Move(5, 0), Board.BLACK);
-		ravi.makeMove(new Move(4, 3), Board.BLACK);
-		ravi.makeMove(new Move(6, 4), Board.BLACK);
-		ravi.makeMove(new Move(3, 7), Board.BLACK);
-		ravi.makeMove(new Move(6, 7), Board.BLACK);
-		ravi.makeMove(new Move(2, 0), Board.BLACK);
-		ravi.makeMove(new Move(4, 0), Board.BLACK);
-		System.out.println(ravi);
-		System.out.println("There is no black network, should be false: " + ravi.hasNetwork(Board.BLACK));
-		System.out.println("Connection list: " + ravi.getNetworkSizes(Board.BLACK));
-		
-		
-		NetworkHandler test = new NetworkHandler();
-		test.makeMove(new Move(0, 1), Board.WHITE);
-		test.makeMove(new Move(1, 0), Board.BLACK);
-		test.undoMove(new Move(1, 0), Board.BLACK);
-		System.out.println(test);
-
-		NetworkHandler test1 = new NetworkHandler();
-		test1.makeMove(new Move(1, 1), Board.WHITE);
-		test1.makeMove(new Move(0, 2), Board.WHITE);
-		test1.makeMove(new Move(3, 1), Board.WHITE);
-		test1.makeMove(new Move(3, 3), Board.WHITE);
-		test1.makeMove(new Move(7, 3), Board.WHITE);
-		test1.makeMove(new Move(7, 5), Board.WHITE);
-		// test1.makeMove(new Move(1, 1), Board.WHITE);
-		// test1.makeMove(new Move(1, 1), Board.WHITE);
-		// test1.makeMove(new Move(1, 1), Board.WHITE);
-		System.out.println("New board \n:" + test1);
-		System.out.println("There is no white network, should be false: " + test1.hasNetwork(Board.WHITE));
-
-		NetworkHandler test2 = new NetworkHandler();
-		test2.makeMove(new Move(1, 1), Board.WHITE);
-		test2.makeMove(new Move(0, 2), Board.WHITE);
-		test2.makeMove(new Move(3, 1), Board.WHITE);
-		test2.makeMove(new Move(3, 3), Board.WHITE);
-		test2.makeMove(new Move(5, 3), Board.WHITE);
-		test2.makeMove(new Move(7, 5), Board.WHITE);
-		System.out.println("New board \n:" + test2);
-		System.out.println("There is a white network, should be true: " + test2.hasNetwork(Board.WHITE));
-
-		NetworkHandler test3 = new NetworkHandler();
-		test3.makeMove(new Move(1, 0), Board.BLACK);
-		test3.makeMove(new Move(5, 7), Board.BLACK);
-		test3.makeMove(new Move(3, 2), Board.BLACK);
-		test3.makeMove(new Move(5, 2), Board.BLACK);
-		test3.makeMove(new Move(5, 4), Board.BLACK);
-		test3.makeMove(new Move(2, 7), Board.BLACK);
-		System.out.println("New Board \n:" + test3);
-		System.out.println("There is no black network, should be false: " + test3.hasNetwork(Board.BLACK));
-		System.out.println("Connection list: " + test3.getNetworkSizes(Board.BLACK));
-
-		NetworkHandler test4 = new NetworkHandler();
-		test4.makeMove(new Move(1, 0), Board.BLACK);
-		test4.makeMove(new Move(5, 7), Board.BLACK);
-		test4.makeMove(new Move(3, 2), Board.BLACK);
-		test4.makeMove(new Move(5, 2), Board.BLACK);
-		test4.makeMove(new Move(5, 4), Board.BLACK);
-		test4.makeMove(new Move(2, 7), Board.BLACK);
-		test4.makeMove(new Move(2, 4), Board.BLACK);
-		System.out.println("New Board \n:" + test4);
-		System.out.println("There is a black network, should be true: " + test4.hasNetwork(Board.BLACK));
-
-		NetworkHandler test5 = new NetworkHandler();
-		test5.makeMove(new Move(0, 3), Board.WHITE);
-		test5.makeMove(new Move(2, 3), Board.BLACK);
-		test5.makeMove(new Move(1, 3), Board.WHITE);
-		test5.makeMove(new Move(3, 1), Board.BLACK);
-		test5.makeMove(new Move(1, 1), Board.WHITE);
-		test5.makeMove(new Move(2, 4), Board.BLACK);
-		test5.makeMove(new Move(2, 1), Board.WHITE);
-		test5.makeMove(new Move(5, 0), Board.BLACK);
-		System.out.println(test5);
-
-		NetworkHandler test6 = new NetworkHandler();
-		test6.makeMove(new Move(1, 1), Board.WHITE);
-		test6.makeMove(new Move(1, 3), Board.WHITE);
-		test6.makeMove(new Move(3, 2), Board.WHITE);
-		test6.makeMove(new Move(3, 4), Board.WHITE);
-		test6.makeMove(new Move(5, 4), Board.WHITE);
-		System.out.println("New Board \n:" + test6);
-		System.out.println("Connection list: " + test6.getNetworkSizes(Board.WHITE));
-
-		NetworkHandler test7 = new NetworkHandler();
-		test7.makeMove(new Move(0, 1), Board.WHITE);
-		test7.makeMove(new Move(1, 1), Board.WHITE);
-		test7.makeMove(new Move(3, 1), Board.WHITE);
-		test7.makeMove(new Move(3, 3), Board.WHITE);
-		test7.makeMove(new Move(6, 1), Board.WHITE);
-		test7.makeMove(new Move(7, 2), Board.WHITE);
-		test7.makeMove(new Move(7, 5), Board.WHITE);
-		test7.makeMove(new Move(6, 6), Board.WHITE);
-
-		test7.makeMove(new Move(4, 0), Board.BLACK);
-		test7.makeMove(new Move(2, 1), Board.BLACK);
-		test7.makeMove(new Move(2, 2), Board.BLACK);
-		test7.makeMove(new Move(5, 4), Board.BLACK);
-		test7.makeMove(new Move(1, 5), Board.BLACK);
-		test7.makeMove(new Move(5, 7), Board.BLACK);
-		test7.makeMove(new Move(4, 7), Board.BLACK);
-
-		System.out.println("New Board \n:" + test7);
-		System.out.println("White does not have a network, should be false: " + test7.hasNetwork(Board.WHITE));
+//		
+//		// NetworkHandler n = new NetworkHandler();
+//		// System.out.println(n);
+//		// n.makeMove(new Move(1, 1), Board.WHITE);
+//		// System.out.println("Added white piece to 1, 1: \n" + n);
+//		// n.makeMove(new Move(3, 3), Board.WHITE);
+//		// System.out.println("Added white piece to 3, 3: \n" + n);
+//		// System.out.println("The list of white locations: " + n.whiteIndices);
+//		// System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
+//		// System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
+//		// n.makeMove(new Move(2, 2), Board.BLACK);
+//		// System.out.println("Added a new black piece in between the two: \n" + n);
+//		// System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
+//		// System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
+//		// System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
+//		// n.makeMove(new Move(1, 3, 2, 2), Board.BLACK);
+//		// System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
+//		// System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
+//		// System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
+//		// System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
+//		// n.makeMove(new Move(1, 3, 2, 1), Board.BLACK);
+//		// System.out.println("Trying to move to (1, 3) again: \n" + n);
+//		// n.makeMove(new Move(5, 3, 3, 3), Board.WHITE);
+//		// System.out.println("Didn't move anywhere.");
+//		// System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
+//		// System.out.println("Moved down two instead");
+//		// n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
+//		// System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
+//		// System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
+//		// System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
+//		// System.out.println("Seems not.");
+//		// System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
+//		// System.out.println("Seems not.");
+//
+//		
+//		// //TESTS FOR hasNetwork:
+//
+//		NetworkHandler n1 = new NetworkHandler();
+//		n1.makeMove(new Move(1, 1), Board.WHITE);
+//		n1.makeMove(new Move(3, 3), Board.WHITE);
+//		n1.makeMove(new Move(3, 1), Board.WHITE);
+//		n1.makeMove(new Move(5, 3), Board.WHITE);
+//		n1.makeMove(new Move(0, 2), Board.WHITE);
+//		n1.makeMove(new Move(7, 5), Board.WHITE);
+//		System.out.println("Testing white networks: \n" + n1);
+//		// System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
+//		// System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
+//		// System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
+//		// System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
+//		// System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
+//		// System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
+//
+//
+//		// System.out.println("Testing row versus column major: ");
+//		// System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
+//		// System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
+//		// System.out.println("Printing out all neighbors of piece at (3, 1): ");
+//		// GamePiece g = n1.pieces[13];
+//		// for (int y = 0; y < 3; y++) {
+//		// 	for (int x = 0; x < 3; x++) {
+//		// 		if (g.pointers[y][x] == null) {
+//		// 			System.out.println("At (" + x + ", " + y + "): " + null);
+//		// 		} else {
+//		// 			System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
+//		// 		}
+//					
+//		// 	}
+//		// }
+//		// System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
+//		// System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
+//
+//		System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
+//
+//		NetworkHandler rhett = new NetworkHandler();
+//		rhett.makeMove(new Move(0, 1), Board.WHITE);
+//		rhett.makeMove(new Move(1, 0), Board.BLACK);
+//		rhett.makeMove(new Move(0, 2), Board.WHITE);
+//		rhett.makeMove(new Move(1, 1), Board.BLACK);
+//		rhett.makeMove(new Move(0, 4), Board.WHITE);
+//		rhett.makeMove(new Move(3, 1), Board.BLACK);
+//		rhett.makeMove(new Move(0, 5), Board.WHITE);
+//		rhett.makeMove(new Move(3, 4), Board.BLACK);
+//		rhett.makeMove(new Move(7, 1), Board.WHITE);
+//		rhett.makeMove(new Move(1, 4), Board.BLACK);
+//		rhett.makeMove(new Move(7, 2), Board.WHITE);
+//		rhett.makeMove(new Move(1, 7), Board.BLACK);
+//		
+//		System.out.println(rhett);
+//		System.out.println("Printing out black piece at (1, 0) \n" + rhett.pieces[10]);
+//		System.out.println("Printing out black piece at (1, 1) \n" + rhett.pieces[11]);
+//		System.out.println("Printing out black piece at (3, 1) \n" + rhett.pieces[31]);
+//		System.out.println("Printing out black piece at (3, 4) \n" + rhett.pieces[34]);
+//		System.out.println("Printing out black piece at (1, 4) \n" + rhett.pieces[14]);
+//		System.out.println("Printing out black piece at (1, 7) \n" + rhett.pieces[17]);
+//		System.out.println("There should be a black network \n" + rhett.hasNetwork(Board.BLACK));
+//
+//
+//		NetworkHandler ajeya = new NetworkHandler();
+//		ajeya.makeMove(new Move(0, 1), Board.WHITE);
+//		ajeya.makeMove(new Move(1, 0), Board.BLACK);
+//		ajeya.makeMove(new Move(1, 3), Board.WHITE);
+//		System.out.println("Board: \n" + ajeya);
+//		System.out.println("There is no white network: " + ajeya.hasNetwork(Board.WHITE));
+//		System.out.println("Connection list: " + ajeya.getNetworkSizes(Board.WHITE));
+//
+//		NetworkHandler ravi = new NetworkHandler();
+//		ravi.makeMove(new Move(1, 2), Board.BLACK);
+//		ravi.makeMove(new Move(2, 2), Board.BLACK);
+//		ravi.makeMove(new Move(4, 2), Board.BLACK);
+//		ravi.makeMove(new Move(5, 0), Board.BLACK);
+//		ravi.makeMove(new Move(4, 3), Board.BLACK);
+//		ravi.makeMove(new Move(6, 4), Board.BLACK);
+//		ravi.makeMove(new Move(3, 7), Board.BLACK);
+//		ravi.makeMove(new Move(6, 7), Board.BLACK);
+//		ravi.makeMove(new Move(2, 0), Board.BLACK);
+//		ravi.makeMove(new Move(4, 0), Board.BLACK);
+//		System.out.println(ravi);
+//		System.out.println("There is no black network, should be false: " + ravi.hasNetwork(Board.BLACK));
+//		System.out.println("Connection list: " + ravi.getNetworkSizes(Board.BLACK));
+//		
+//		
+//		NetworkHandler test = new NetworkHandler();
+//		test.makeMove(new Move(0, 1), Board.WHITE);
+//		test.makeMove(new Move(1, 0), Board.BLACK);
+//		test.undoMove(new Move(1, 0), Board.BLACK);
+//		System.out.println(test);
+//
+//		NetworkHandler test1 = new NetworkHandler();
+//		test1.makeMove(new Move(1, 1), Board.WHITE);
+//		test1.makeMove(new Move(0, 2), Board.WHITE);
+//		test1.makeMove(new Move(3, 1), Board.WHITE);
+//		test1.makeMove(new Move(3, 3), Board.WHITE);
+//		test1.makeMove(new Move(7, 3), Board.WHITE);
+//		test1.makeMove(new Move(7, 5), Board.WHITE);
+//		// test1.makeMove(new Move(1, 1), Board.WHITE);
+//		// test1.makeMove(new Move(1, 1), Board.WHITE);
+//		// test1.makeMove(new Move(1, 1), Board.WHITE);
+//		System.out.println("New board \n:" + test1);
+//		System.out.println("There is no white network, should be false: " + test1.hasNetwork(Board.WHITE));
+//
+//		NetworkHandler test2 = new NetworkHandler();
+//		test2.makeMove(new Move(1, 1), Board.WHITE);
+//		test2.makeMove(new Move(0, 2), Board.WHITE);
+//		test2.makeMove(new Move(3, 1), Board.WHITE);
+//		test2.makeMove(new Move(3, 3), Board.WHITE);
+//		test2.makeMove(new Move(5, 3), Board.WHITE);
+//		test2.makeMove(new Move(7, 5), Board.WHITE);
+//		System.out.println("New board \n:" + test2);
+//		System.out.println("There is a white network, should be true: " + test2.hasNetwork(Board.WHITE));
+//
+//		NetworkHandler test3 = new NetworkHandler();
+//		test3.makeMove(new Move(1, 0), Board.BLACK);
+//		test3.makeMove(new Move(5, 7), Board.BLACK);
+//		test3.makeMove(new Move(3, 2), Board.BLACK);
+//		test3.makeMove(new Move(5, 2), Board.BLACK);
+//		test3.makeMove(new Move(5, 4), Board.BLACK);
+//		test3.makeMove(new Move(2, 7), Board.BLACK);
+//		System.out.println("New Board \n:" + test3);
+//		System.out.println("There is no black network, should be false: " + test3.hasNetwork(Board.BLACK));
+//		System.out.println("Connection list: " + test3.getNetworkSizes(Board.BLACK));
+//
+//		NetworkHandler test4 = new NetworkHandler();
+//		test4.makeMove(new Move(1, 0), Board.BLACK);
+//		test4.makeMove(new Move(5, 7), Board.BLACK);
+//		test4.makeMove(new Move(3, 2), Board.BLACK);
+//		test4.makeMove(new Move(5, 2), Board.BLACK);
+//		test4.makeMove(new Move(5, 4), Board.BLACK);
+//		test4.makeMove(new Move(2, 7), Board.BLACK);
+//		test4.makeMove(new Move(2, 4), Board.BLACK);
+//		System.out.println("New Board \n:" + test4);
+//		System.out.println("There is a black network, should be true: " + test4.hasNetwork(Board.BLACK));
+//
+//		NetworkHandler test5 = new NetworkHandler();
+//		test5.makeMove(new Move(0, 3), Board.WHITE);
+//		test5.makeMove(new Move(2, 3), Board.BLACK);
+//		test5.makeMove(new Move(1, 3), Board.WHITE);
+//		test5.makeMove(new Move(3, 1), Board.BLACK);
+//		test5.makeMove(new Move(1, 1), Board.WHITE);
+//		test5.makeMove(new Move(2, 4), Board.BLACK);
+//		test5.makeMove(new Move(2, 1), Board.WHITE);
+//		test5.makeMove(new Move(5, 0), Board.BLACK);
+//		System.out.println(test5);
+//
+//		NetworkHandler test6 = new NetworkHandler();
+//		test6.makeMove(new Move(1, 1), Board.WHITE);
+//		test6.makeMove(new Move(1, 3), Board.WHITE);
+//		test6.makeMove(new Move(3, 2), Board.WHITE);
+//		test6.makeMove(new Move(3, 4), Board.WHITE);
+//		test6.makeMove(new Move(5, 4), Board.WHITE);
+//		System.out.println("New Board \n:" + test6);
+//		System.out.println("Connection list: " + test6.getNetworkSizes(Board.WHITE));
+//
+//		NetworkHandler test7 = new NetworkHandler();
+//		test7.makeMove(new Move(0, 1), Board.WHITE);
+//		test7.makeMove(new Move(1, 1), Board.WHITE);
+//		test7.makeMove(new Move(3, 1), Board.WHITE);
+//		test7.makeMove(new Move(3, 3), Board.WHITE);
+//		test7.makeMove(new Move(6, 1), Board.WHITE);
+//		test7.makeMove(new Move(7, 2), Board.WHITE);
+//		test7.makeMove(new Move(7, 5), Board.WHITE);
+//		test7.makeMove(new Move(6, 6), Board.WHITE);
+//
+//		test7.makeMove(new Move(4, 0), Board.BLACK);
+//		test7.makeMove(new Move(2, 1), Board.BLACK);
+//		test7.makeMove(new Move(2, 2), Board.BLACK);
+//		test7.makeMove(new Move(5, 4), Board.BLACK);
+//		test7.makeMove(new Move(1, 5), Board.BLACK);
+//		test7.makeMove(new Move(5, 7), Board.BLACK);
+//		test7.makeMove(new Move(4, 7), Board.BLACK);
+//
+//		System.out.println("New Board \n:" + test7);
+//		System.out.println("White does not have a network, should be false: " + test7.hasNetwork(Board.WHITE));
 	}
+	
+	
 
 	public String toString() {
 		String str = "";
@@ -291,16 +286,17 @@ class NetworkHandler {
 		return str + "   |\n --- --- --- --- --- --- --- ---";
 
 	}
-	//***************************************************************
-	//*PRETEND THAT X IS ROW AND Y IS COLUMN						*
-	//*IT IS NOT TECHNICALLY CORRECT IN TRADITIONAL THINKING		*
-	//*BUT OTHERWISE I WILL GET HELLA CONFUSED						*
-	//*LOVE, RHETT													*
-	//***************************************************************
-
-
-	//This method returns a -1 for start, 0 for not inGoal, and 1 for end
-	@SuppressWarnings("unused")
+	/**
+	 * Determines if a particular location on the board is a goal location for that color
+	 * 
+	 *Checks to see if the piece is in the side columns for white or the top and bottom rows for black.
+	 * -1 indicates the piece is in the top or left
+	 * 1 indicates the piece is in the bottom or right
+	 * 0 indicates the piece is not in a goal.
+	 * @param color		color of the piece being placed
+	 * @param row 		row the piece is placed
+	 * @param col		column the piece is placed
+	 */
 	private int inGoal(int color, int row, int col)
 	{
 		if(color==Board.BLACK)
@@ -318,7 +314,18 @@ class NetworkHandler {
 		return 0;
 	}
 	
-	
+	/**
+	 * Updates internal configuration with the specified move for the
+	 * specified color. Assumes that <code>m</code> is a valid move. Uses color
+	 * as specified in Board.WHITE and Board.BLACK (assume the same for other
+	 * methods).
+	 * 
+	 * Step moves are converted into Add moves by first removing the piece 
+	 * being moved from the board and then adding it in its new location recursively
+	 * 
+	 * @param m			Move to update with
+	 * @param color		color of the player who made the move
+	 */
 	void makeMove(Move m, int color) {
 		if(m.moveKind == Move.ADD) {
 			Integer ind = m.y1*10+m.x1;
