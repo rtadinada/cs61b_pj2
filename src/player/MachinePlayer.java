@@ -60,8 +60,16 @@ public class MachinePlayer extends Player {
 			else									// Add move
 				maxDepth = 5;
 		}
-		Move m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
-		Scorer.clearCache();
+		Move m;
+		if(board.getNumPieces(color) == 0) { 		// First move starts in center
+			m = new Move(3,3);
+			if(!board.isValidMove(m, color))
+				m = new Move(3, 4);
+		}
+		else {
+			m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
+			Scorer.clearCache();
+		}
 		board.makeMove(m, color);
 		double seconds = (System.currentTimeMillis() - start)/1000d;
 		System.out.println("Move chosen in " + seconds + " seconds.");
@@ -102,8 +110,6 @@ public class MachinePlayer extends Player {
 			if(a >= b)
 				break;
 		}
-		if (bestMove.moveKind == Move.QUIT)
-			System.out.println(board.getValidMoves(color));
 		return new ScoreMove(bestScore, bestMove);
 	}
 	
@@ -136,7 +142,7 @@ public class MachinePlayer extends Player {
 			score = chooseMove(depth, oppositeColor(color), a, b).score;
 			Scorer.addScore(board, color, score);
 		}
-		System.out.println("The score for this board is " + score);
+		//System.out.println("The score for this board is " + score);
 		board.rollback();
 		return score;
 
@@ -186,22 +192,7 @@ public class MachinePlayer extends Player {
 	}
 	
 	public static void main(String[] args) {
-		MachinePlayer rhett = new MachinePlayer(0);
-		rhett.opponentMove(new Move(0, 1));
-		rhett.forceMove(new Move(1, 0));
-		rhett.opponentMove(new Move(0, 2));
-		rhett.forceMove(new Move(1, 1));
-		rhett.opponentMove(new Move(0, 4));
-		rhett.forceMove(new Move(3, 1));
-		rhett.opponentMove(new Move(0, 5));
-		rhett.forceMove(new Move(3, 4));
-		rhett.opponentMove(new Move(7, 1));
-		rhett.forceMove(new Move(1, 4));
-		rhett.opponentMove(new Move(7, 2));
-		rhett.forceMove(new Move(1, 7));
 		
-		System.out.println(rhett.board);
-		System.out.println("There should be a black network \n" + rhett.board.hasNetwork(Board.BLACK) + "<--------------------------");
 	}
 
 }
