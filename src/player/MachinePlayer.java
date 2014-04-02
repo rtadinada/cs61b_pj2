@@ -58,7 +58,7 @@ public class MachinePlayer extends Player {
 			if(board.getNumPieces(color) > 8)		// Step move
 				maxDepth = 3;
 			else									// Add move
-				maxDepth = 2;
+				maxDepth = 5;
 		}
 		Move m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
 		Scorer.clearCache();

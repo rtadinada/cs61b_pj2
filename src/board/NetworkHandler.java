@@ -496,14 +496,15 @@ class NetworkHandler {
 		return networkSizes;
 	}
 
-	/**
-	* Returns how many more pieces need to be placed for the player of this color to have a complete 
-	* network. 
-	*/
-	int numAwayFromNetwork(int color) {
-
+	private maxConnectionLength(GamePiece piece, int color, int numSoFar) {
+		int maxLength = numSoFar;
+		piece.visited = true;
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				GamePiece neighbor = piece.
+			}
+		}
 	}
-
 	/**
 	 * Returns the number of connections between two pieces of the specified
 	 * color on the board
