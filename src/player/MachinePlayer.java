@@ -124,24 +124,24 @@ public class MachinePlayer extends Player {
 		if(board.hasNetwork(oppositeColor(this.color))) {
 			System.out.println("\n\nFound losing board\n" + board);
 			score = Scorer.MINSCORE;
-		} else {
-			System.out.println("\n\nThis board has no network for opponent\n" + board);
-		}
-		if(board.hasNetwork(this.color)) {
+		} else if(board.hasNetwork(this.color)) {
 			System.out.println("\n\nFound winning board\n" + board);
 			score = Scorer.MAXSCORE+depth;
-		} else {
-			System.out.println("\n\nThis board has no network for self\n" + board);
-		}
+		} 
+		else {
+			// System.out.println("\n\nThis board has no network for self\n" + board);
+		
 		if(depth == 0 || Scorer.hasScore(board, color))
 			score = Scorer.getScore(board, this.color);
 		else {
 			score = chooseMove(depth, oppositeColor(color), a, b).score;
 			Scorer.addScore(board, color, score);
+			}
 		}
-		
+		System.out.println("The score for this board is " + score);
 		board.rollback();
 		return score;
+
 	}
 
 

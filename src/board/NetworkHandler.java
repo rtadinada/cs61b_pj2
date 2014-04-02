@@ -53,42 +53,42 @@ class NetworkHandler {
 	public static void main (String [] args)
 	{
 		
-		/*
-		NetworkHandler n = new NetworkHandler();
-		System.out.println(n);
-		n.makeMove(new Move(1, 1), Board.WHITE);
-		System.out.println("Added white piece to 1, 1: \n" + n);
-		n.makeMove(new Move(3, 3), Board.WHITE);
-		System.out.println("Added white piece to 3, 3: \n" + n);
-		System.out.println("The list of white locations: " + n.whiteIndices);
-		System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
-		System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
-		n.makeMove(new Move(2, 2), Board.BLACK);
-		System.out.println("Added a new black piece in between the two: \n" + n);
-		System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
-		System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
-		System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
-		n.makeMove(new Move(1, 3, 2, 2), Board.BLACK);
-		System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
-		System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
-		System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
-		System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
-		n.makeMove(new Move(1, 3, 2, 1), Board.BLACK);
-		System.out.println("Trying to move to (1, 3) again: \n" + n);
-		n.makeMove(new Move(5, 3, 3, 3), Board.WHITE);
-		System.out.println("Didn't move anywhere.");
-		System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
-		System.out.println("Moved down two instead");
-		n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
-		System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
-		System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
-		System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
-		System.out.println("Seems not.");
-		System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
-		System.out.println("Seems not.");
+		
+		// NetworkHandler n = new NetworkHandler();
+		// System.out.println(n);
+		// n.makeMove(new Move(1, 1), Board.WHITE);
+		// System.out.println("Added white piece to 1, 1: \n" + n);
+		// n.makeMove(new Move(3, 3), Board.WHITE);
+		// System.out.println("Added white piece to 3, 3: \n" + n);
+		// System.out.println("The list of white locations: " + n.whiteIndices);
+		// System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
+		// System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
+		// n.makeMove(new Move(2, 2), Board.BLACK);
+		// System.out.println("Added a new black piece in between the two: \n" + n);
+		// System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
+		// System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
+		// System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
+		// n.makeMove(new Move(1, 3, 2, 2), Board.BLACK);
+		// System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
+		// System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
+		// System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
+		// System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
+		// n.makeMove(new Move(1, 3, 2, 1), Board.BLACK);
+		// System.out.println("Trying to move to (1, 3) again: \n" + n);
+		// n.makeMove(new Move(5, 3, 3, 3), Board.WHITE);
+		// System.out.println("Didn't move anywhere.");
+		// System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
+		// System.out.println("Moved down two instead");
+		// n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
+		// System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
+		// System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
+		// System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
+		// System.out.println("Seems not.");
+		// System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
+		// System.out.println("Seems not.");
 
 		
-		//TESTS FOR hasNetwork:
+		// //TESTS FOR hasNetwork:
 
 		NetworkHandler n1 = new NetworkHandler();
 		n1.makeMove(new Move(1, 1), Board.WHITE);
@@ -98,31 +98,31 @@ class NetworkHandler {
 		n1.makeMove(new Move(0, 2), Board.WHITE);
 		n1.makeMove(new Move(7, 5), Board.WHITE);
 		System.out.println("Testing white networks: \n" + n1);
-		System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
-		System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
-		System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
-		System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
-		System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
-		System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
+		// System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
+		// System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
+		// System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
+		// System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
+		// System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
+		// System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
 
 
-		System.out.println("Testing row versus column major: ");
-		System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
-		System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
-		System.out.println("Printing out all neighbors of piece at (3, 1): ");
-		GamePiece g = n1.pieces[13];
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				if (g.pointers[y][x] == null) {
-					System.out.println("At (" + x + ", " + y + "): " + null);
-				} else {
-					System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
-				}
+		// System.out.println("Testing row versus column major: ");
+		// System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
+		// System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
+		// System.out.println("Printing out all neighbors of piece at (3, 1): ");
+		// GamePiece g = n1.pieces[13];
+		// for (int y = 0; y < 3; y++) {
+		// 	for (int x = 0; x < 3; x++) {
+		// 		if (g.pointers[y][x] == null) {
+		// 			System.out.println("At (" + x + ", " + y + "): " + null);
+		// 		} else {
+		// 			System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
+		// 		}
 					
-			}
-		}
-		System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
-		System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
+		// 	}
+		// }
+		// System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
+		// System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
 
 		System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
 
@@ -156,6 +156,7 @@ class NetworkHandler {
 		ajeya.makeMove(new Move(1, 3), Board.WHITE);
 		System.out.println("Board: \n" + ajeya);
 		System.out.println("There is no white network: " + ajeya.hasNetwork(Board.WHITE));
+		System.out.println("Connection list: " + ajeya.getNetworkSizes(Board.WHITE));
 
 		NetworkHandler ravi = new NetworkHandler();
 		ravi.makeMove(new Move(1, 2), Board.BLACK);
@@ -169,14 +170,101 @@ class NetworkHandler {
 		ravi.makeMove(new Move(2, 0), Board.BLACK);
 		ravi.makeMove(new Move(4, 0), Board.BLACK);
 		System.out.println(ravi);
-		System.out.println("There is no black network: " + ravi.hasNetwork(Board.BLACK));
-		*/
+		System.out.println("There is no black network, should be false: " + ravi.hasNetwork(Board.BLACK));
+		System.out.println("Connection list: " + ravi.getNetworkSizes(Board.BLACK));
+		
 		
 		NetworkHandler test = new NetworkHandler();
 		test.makeMove(new Move(0, 1), Board.WHITE);
 		test.makeMove(new Move(1, 0), Board.BLACK);
 		test.undoMove(new Move(1, 0), Board.BLACK);
 		System.out.println(test);
+
+		NetworkHandler test1 = new NetworkHandler();
+		test1.makeMove(new Move(1, 1), Board.WHITE);
+		test1.makeMove(new Move(0, 2), Board.WHITE);
+		test1.makeMove(new Move(3, 1), Board.WHITE);
+		test1.makeMove(new Move(3, 3), Board.WHITE);
+		test1.makeMove(new Move(7, 3), Board.WHITE);
+		test1.makeMove(new Move(7, 5), Board.WHITE);
+		// test1.makeMove(new Move(1, 1), Board.WHITE);
+		// test1.makeMove(new Move(1, 1), Board.WHITE);
+		// test1.makeMove(new Move(1, 1), Board.WHITE);
+		System.out.println("New board \n:" + test1);
+		System.out.println("There is no white network, should be false: " + test1.hasNetwork(Board.WHITE));
+
+		NetworkHandler test2 = new NetworkHandler();
+		test2.makeMove(new Move(1, 1), Board.WHITE);
+		test2.makeMove(new Move(0, 2), Board.WHITE);
+		test2.makeMove(new Move(3, 1), Board.WHITE);
+		test2.makeMove(new Move(3, 3), Board.WHITE);
+		test2.makeMove(new Move(5, 3), Board.WHITE);
+		test2.makeMove(new Move(7, 5), Board.WHITE);
+		System.out.println("New board \n:" + test2);
+		System.out.println("There is a white network, should be true: " + test2.hasNetwork(Board.WHITE));
+
+		NetworkHandler test3 = new NetworkHandler();
+		test3.makeMove(new Move(1, 0), Board.BLACK);
+		test3.makeMove(new Move(5, 7), Board.BLACK);
+		test3.makeMove(new Move(3, 2), Board.BLACK);
+		test3.makeMove(new Move(5, 2), Board.BLACK);
+		test3.makeMove(new Move(5, 4), Board.BLACK);
+		test3.makeMove(new Move(2, 7), Board.BLACK);
+		System.out.println("New Board \n:" + test3);
+		System.out.println("There is no black network, should be false: " + test3.hasNetwork(Board.BLACK));
+		System.out.println("Connection list: " + test3.getNetworkSizes(Board.BLACK));
+
+		NetworkHandler test4 = new NetworkHandler();
+		test4.makeMove(new Move(1, 0), Board.BLACK);
+		test4.makeMove(new Move(5, 7), Board.BLACK);
+		test4.makeMove(new Move(3, 2), Board.BLACK);
+		test4.makeMove(new Move(5, 2), Board.BLACK);
+		test4.makeMove(new Move(5, 4), Board.BLACK);
+		test4.makeMove(new Move(2, 7), Board.BLACK);
+		test4.makeMove(new Move(2, 4), Board.BLACK);
+		System.out.println("New Board \n:" + test4);
+		System.out.println("There is a black network, should be true: " + test4.hasNetwork(Board.BLACK));
+
+		NetworkHandler test5 = new NetworkHandler();
+		test5.makeMove(new Move(0, 3), Board.WHITE);
+		test5.makeMove(new Move(2, 3), Board.BLACK);
+		test5.makeMove(new Move(1, 3), Board.WHITE);
+		test5.makeMove(new Move(3, 1), Board.BLACK);
+		test5.makeMove(new Move(1, 1), Board.WHITE);
+		test5.makeMove(new Move(2, 4), Board.BLACK);
+		test5.makeMove(new Move(2, 1), Board.WHITE);
+		test5.makeMove(new Move(5, 0), Board.BLACK);
+		System.out.println(test5);
+
+		NetworkHandler test6 = new NetworkHandler();
+		test6.makeMove(new Move(1, 1), Board.WHITE);
+		test6.makeMove(new Move(1, 3), Board.WHITE);
+		test6.makeMove(new Move(3, 2), Board.WHITE);
+		test6.makeMove(new Move(3, 4), Board.WHITE);
+		test6.makeMove(new Move(5, 4), Board.WHITE);
+		System.out.println("New Board \n:" + test6);
+		System.out.println("Connection list: " + test6.getNetworkSizes(Board.WHITE));
+
+		NetworkHandler test7 = new NetworkHandler();
+		test7.makeMove(new Move(0, 1), Board.WHITE);
+		test7.makeMove(new Move(1, 1), Board.WHITE);
+		test7.makeMove(new Move(3, 1), Board.WHITE);
+		test7.makeMove(new Move(3, 3), Board.WHITE);
+		test7.makeMove(new Move(6, 1), Board.WHITE);
+		test7.makeMove(new Move(7, 2), Board.WHITE);
+		test7.makeMove(new Move(7, 5), Board.WHITE);
+		test7.makeMove(new Move(6, 6), Board.WHITE);
+
+		test7.makeMove(new Move(4, 0), Board.BLACK);
+		test7.makeMove(new Move(2, 1), Board.BLACK);
+		test7.makeMove(new Move(2, 2), Board.BLACK);
+		test7.makeMove(new Move(5, 4), Board.BLACK);
+		test7.makeMove(new Move(1, 5), Board.BLACK);
+		test7.makeMove(new Move(5, 7), Board.BLACK);
+		test7.makeMove(new Move(4, 7), Board.BLACK);
+
+		System.out.println("New Board \n:" + test7);
+		System.out.println("White does not have a network, should be false: " + test7.hasNetwork(Board.WHITE));
 	}
 
 	public String toString() {
@@ -288,7 +376,7 @@ class NetworkHandler {
 				}																			 //pointers of those it pointed to
 			}											
 		}
-		pieces[ind] = new GamePiece(ind%10, ind/10, 0);
+		pieces[ind] = new GamePiece(ind/10, ind%10, 0);
 	}
 	
 	private void addPiece(GamePiece added) {
@@ -369,14 +457,14 @@ class NetworkHandler {
 			else if (prow>row&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][1]))
 				added.pointers[2][1] = potentialNeighbor;
 		}
-		else if((prow-row)/(pcol-col) == 1)
+		else if((prow-row) == (pcol-col))
 		{
 			if(pcol<col&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][0]))
 				added.pointers[0][0]= potentialNeighbor;
 			else if(pcol>col&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][2]))
 				added.pointers[2][2] = potentialNeighbor;
 		}
-		else if((prow-row)/(pcol-col)==-1)
+		else if((prow-row) == -(pcol-col))
 		{
 			if(pcol<col&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][0]))
 				added.pointers[2][0] = potentialNeighbor;
@@ -407,7 +495,24 @@ class NetworkHandler {
 			Move newMove = new Move(m.x2, m.y2, m.x1, m.y1);
 			makeMove(newMove, color);
 		}
+		clearVisitation(color);
+		clearVisitation(-color);
 	}
+
+	private void clearVisitation(int color) {
+		//Goes through every piece of color, and makes the visited box all false.
+		//This is so that networkSizes can be recomputed upon rollback and trying something new;
+		LinkedList<Integer> listOfPieces;
+		if (color == Board.BLACK) {
+			listOfPieces = blackIndices;
+		} else {
+			listOfPieces = whiteIndices;
+		}
+		for (int i: listOfPieces) {
+			pieces[i].visited = false; 
+		}
+	}
+
 
 	/**
 	 * Returns true if the player of the specified color has a fully formed
@@ -421,18 +526,18 @@ class NetworkHandler {
 		int step;
 		if (color == Board.BLACK) {
 			start = 1;
-			step = 1; //The black goals on the top are 1, 2,...7
+			step = 1; //The white goals on the left are 01, 02, 03...07
 		} else {
 			start = 10;
-			step = 10; // The white goals on the left are 10, 20...70
+			step = 10; // The black goals on the top are 10, 20...70
 		}
 		for (int i = start; i <= step*7; i += step) {
 			GamePiece currPiece = pieces[i];
 			// System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
 			if (currPiece != null && currPiece.color == color) {
-				int distance = numToEndGoal(currPiece, 1, -1, -1);
+				int distance = numToEndGoal(currPiece, 0, -1, -1);
 				if (distance >= 5) {
-					System.out.println("Found network: \n" + this);
+					// System.out.println("Found network: \n" + this);
 					return true;
 				}
 			}
@@ -468,6 +573,7 @@ class NetworkHandler {
 					GamePiece neighbor = piece.pointers[y][x];
 					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) {
 						// System.out.println("The neighbor: \n" + neighbor);
+						// System.out.println("Neighbor at (" + neighbor.col + ", " + neighbor.row + ")");
 						// System.out.println("It should not have been visited yet: " + neighbor.visited);
 						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));
 						// System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
@@ -505,24 +611,49 @@ class NetworkHandler {
 				} else {
 					i = 10*x + y; //Go column-by-column with White (10, 20, 30,...1, 11, 21...)
 				}
+				if (i == 77) {
+					break;
+				}
 				GamePiece piece = pieces[i];
+				// System.out.println("Checking " + i + "\n:" + piece);
 				if (piece != null && !(piece.visited) && piece.color == color) {
-					networkSizes.add(maxConnectionLength(piece, color, 0));
+					int maxLength = maxConnectionLength(piece, color, 0, -1);
+					// System.out.println("Connections from piece at (" + piece.col + ", " + piece.row + ") " + maxLength);
+					networkSizes.add(maxLength);
 				}
 			}
 		}
 		return networkSizes;
 	}
 
-	private int maxConnectionLength(GamePiece piece, int color, int numSoFar) {
-		int maxLength = numSoFar;
+
+	private int maxConnectionLength(GamePiece piece, int color, int numSoFar, int prevDirection) {
 		piece.visited = true;
+		if (inGoal(color, piece.row, piece.col) == 1) {
+			return numSoFar;
+		}
+		int maxLength = numSoFar;
+		// System.out.println("Visited piece at (" + piece.col + ", " + piece.row + "): \n" + piece);
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				GamePiece neighbor = piece;
+				if ((x + 3*y) != prevDirection && !(inGoal(color, piece.row, piece.col) == -1 && inGoal(color, y, x) == -1)) {
+					GamePiece neighbor = piece.pointers[y][x];
+					if (!(neighbor == null) && !(neighbor.visited) && (neighbor.color == color)) {
+						// System.out.println("Calling recursively on piece at (" + neighbor.col + ", " + neighbor.row + "): \n" + neighbor);
+						int distFrom = maxConnectionLength(neighbor, color, numSoFar + 1, x + 3*y);
+						// System.out.println("Result: " + distFrom);
+						if (distFrom > maxLength) {
+							maxLength = distFrom;
+						} else {
+							neighbor.visited = false;
+						}
+					}
+				}
 			}
 		}
-		return -1;
+		//piece.visited = false;
+		numSoFar = 0;
+		return maxLength;
 	}
 	/**
 	 * Returns the number of connections between two pieces of the specified
