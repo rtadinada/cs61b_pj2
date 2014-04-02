@@ -72,7 +72,7 @@ public class MachinePlayer extends Player {
 		}
 		board.makeMove(m, color);
 		double seconds = (System.currentTimeMillis() - start)/1000d;
-		System.out.println("Move chosen in " + seconds + " seconds.");
+		// System.out.println("Move chosen in " + seconds + " seconds.");
 		return m;
 	}
 	
@@ -129,11 +129,11 @@ public class MachinePlayer extends Player {
 		int score = 0;
 		if(board.hasNetwork(oppositeColor(this.color))) {
 			// System.out.println("\n\nFound losing board\n" + board);
-			score = Scorer.MINSCORE;
+			score = Scorer.MINSCORE - 10*depth;
 		}
 		else if(board.hasNetwork(this.color)) {
 			// System.out.println("\n\nFound winning board\n" + board);
-			score = Scorer.MAXSCORE+depth;
+			score = Scorer.MAXSCORE + 10*depth;
 		}
 		else if(depth == 0 || Scorer.hasScore(board, color)) {
 			score = Scorer.getScore(board, this.color);
