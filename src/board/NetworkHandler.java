@@ -141,12 +141,12 @@ class NetworkHandler {
 		rhett.makeMove(new Move(1, 7), Board.BLACK);
 		
 		System.out.println(rhett);
-		System.out.println("Printing out black piece at (1, 0) \n" + rhett.pieces[1]);
+		System.out.println("Printing out black piece at (1, 0) \n" + rhett.pieces[10]);
 		System.out.println("Printing out black piece at (1, 1) \n" + rhett.pieces[11]);
-		System.out.println("Printing out black piece at (3, 1) \n" + rhett.pieces[13]);
-		System.out.println("Printing out black piece at (3, 4) \n" + rhett.pieces[43]);
-		System.out.println("Printing out black piece at (1, 4) \n" + rhett.pieces[41]);
-		System.out.println("Printing out black piece at (1, 7) \n" + rhett.pieces[71]);
+		System.out.println("Printing out black piece at (3, 1) \n" + rhett.pieces[31]);
+		System.out.println("Printing out black piece at (3, 4) \n" + rhett.pieces[34]);
+		System.out.println("Printing out black piece at (1, 4) \n" + rhett.pieces[14]);
+		System.out.println("Printing out black piece at (1, 7) \n" + rhett.pieces[17]);
 		System.out.println("There should be a black network \n" + rhett.hasNetwork(Board.BLACK));
 
 
@@ -182,12 +182,12 @@ class NetworkHandler {
 	public String toString() {
 		String str = "";
 		for (int i = 0; i <= 76; i++) {
-			int x = i%10;
-			int y = i/10;
-			if (x < 8 && y < 8) {
+			int row = i/10;
+			int col = i%10;
+			if (row < 8 && col < 8) {
 				GamePiece piece = pieces[i];
-				if (x == 0) {
-					str += " --- --- --- --- --- --- --- ---\n|";
+				if (col == 0) {
+					str += "\n --- --- --- --- --- --- --- ---\n|";
 				}
 				if (piece.color == Board.BLACK) {
 					str += " B |";
@@ -197,9 +197,6 @@ class NetworkHandler {
 				}
 				else {
 					str += "   |";
-				}
-				if (x == 7) {
-					str += "\n";
 				}
  			}
 		}
