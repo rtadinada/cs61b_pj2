@@ -36,7 +36,7 @@ class Scorer {
 		LinkedList<Integer> myNetworks = b.getNetworkSizes(color);
 		LinkedList<Integer> oppNetworks = b.getNetworkSizes(-color);		
 		int score = (getMax(myNetworks) - getMax(oppNetworks))*100;
-		score += (myNetworks.size() - oppNetworks.size())*10;
+		// score += (myNetworks.size() - oppNetworks.size())*10;
 		scoreCache.put(bc, score);
 		return score;
 	}
