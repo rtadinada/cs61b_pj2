@@ -32,6 +32,7 @@ class Scorer {
 		BoardColor bc = new BoardColor(b, color);
 		if(scoreCache.containsKey(bc))
 			return scoreCache.get(bc);
+		
 		//Score based on the difference between your max partial network size and theirs
 		LinkedList<Integer> myNetworks = b.getNetworkSizes(color);
 		LinkedList<Integer> oppNetworks = b.getNetworkSizes(-color);		
