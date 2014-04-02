@@ -386,11 +386,11 @@ class NetworkHandler {
 		if(m.moveKind==Move.ADD)
 		{
 			if(color == Board.BLACK)
-				blackIndices.remove(0);//It's assumed that m was the last move8
+				blackIndices.remove(blackIndices.size() - 1);//It's assumed that m was the last move8
 			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
-				whiteIndices.remove(0);//Most to least recent
-			// int i = m.x1*10 + m.y1;
-			// pieces[i] = new GamePiece();
+				whiteIndices.remove(whiteIndices.size() - 1);//Most to least recent
+			int i = m.x1*10 + m.y1;
+			pieces[i].color = 0;
 		}
 		else if(m.moveKind==Move.STEP)
 		{
@@ -422,6 +422,7 @@ class NetworkHandler {
 			if (currPiece != null && currPiece.color == color) {
 				int distance = numToEndGoal(currPiece, 1, -1, -1);
 				if (distance >= 5) {
+					System.out.println("Found network: \n" + pieces);
 					return true;
 				}
 			}
