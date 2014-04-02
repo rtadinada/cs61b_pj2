@@ -149,7 +149,12 @@ class NetworkHandler {
 		System.out.println("There should be a black network \n" + rhett.hasNetwork(Board.BLACK));
 
 
-
+		NetworkHandler ajeya = new NetworkHandler();
+		ajeya.makeMove(new Move(0, 1), Board.WHITE);
+		ajeya.makeMove(new Move(1, 0), Board.BLACK);
+		ajeya.makeMove(new Move(1, 3), Board.WHITE);
+		System.out.println("Board: \n" + ajeya);
+		System.out.println("There is no white network: " + ajeya.hasNetwork(Board.WHITE));
 	}
 
 	public String toString() {
@@ -384,6 +389,8 @@ class NetworkHandler {
 				blackIndices.remove(0);//It's assumed that m was the last move8
 			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
 				whiteIndices.remove(0);//Most to least recent
+			int i = m.x1*10 + m.y1;
+			pieces[i] = new GamePiece();
 		}
 		else if(m.moveKind==Move.STEP)
 		{
@@ -496,14 +503,15 @@ class NetworkHandler {
 		return networkSizes;
 	}
 
-	private maxConnectionLength(GamePiece piece, int color, int numSoFar) {
+	private int maxConnectionLength(GamePiece piece, int color, int numSoFar) {
 		int maxLength = numSoFar;
 		piece.visited = true;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				GamePiece neighbor = piece.
+				GamePiece neighbor = piece;
 			}
 		}
+		return -1;
 	}
 	/**
 	 * Returns the number of connections between two pieces of the specified
@@ -512,11 +520,6 @@ class NetworkHandler {
 	 * @param color		color of the player
 	 * @return	the number of connections of the color color
 	 */
-	int getNumConnections(int color) 
-	{
-
-	}
-
 
 }
 class GamePiece
