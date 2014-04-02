@@ -261,19 +261,34 @@ class NetworkHandler {
 					}
 				}
 			}
-			GamePiece toMove = pieces[ind];
-			for (int row = 0; row<3;row++)
-			{
-				for(int col = 0; col<3; col++)
-				{
-					GamePiece affectedNeighbor = toMove.pointers[row][col];
-					if(affectedNeighbor ==null)
-						continue;
-					affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
-				}											//pointers of those it pointed to
-			}
+			removePiece(ind);
+//			GamePiece toMove = pieces[ind];
+//			for (int row = 0; row<3;row++)
+//			{
+//				for(int col = 0; col<3; col++)
+//				{
+//					GamePiece affectedNeighbor = toMove.pointers[row][col];
+//					if(affectedNeighbor ==null)
+//						continue;
+//					affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
+//				}											//pointers of those it pointed to
+//			}
 			Move nm = new Move(m.x1, m.y1);
 			makeMove(nm, color); // This will trigger the Add, rather than Step, functionality.
+		}
+	}
+	private void removePiece(int ind)
+	{
+		GamePiece toMove = pieces[ind];
+		for (int row = 0; row<3;row++)
+		{
+			for(int col = 0; col<3; col++)
+			{
+				GamePiece affectedNeighbor = toMove.pointers[row][col];
+				if(affectedNeighbor ==null)
+					continue;
+				affectedNeighbor.pointers[2-row][2-col] = toMove.pointers[2-row][2-col]; //Erasing the moved piece from the 
+			}											//pointers of those it pointed to
 		}
 	}
 	private void addPiece(GamePiece added)
@@ -385,12 +400,23 @@ class NetworkHandler {
 	{
 		if(m.moveKind==Move.ADD)
 		{
+			int index= 0;
 			if(color == Board.BLACK)
+<<<<<<< HEAD
 				blackIndices.remove(blackIndices.size() - 1);//It's assumed that m was the last move8
 			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
 				whiteIndices.remove(whiteIndices.size() - 1);//Most to least recent
 			int i = m.x1*10 + m.y1;
 			pieces[i].color = 0;
+=======
+				index = blackIndices.remove(0);//It's assumed that m was the last move8
+			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
+				index = whiteIndices.remove(0);//Most to least recent
+			// int i = m.x1*10 + m.y1;
+			// pieces[i] = new GamePiece();
+			removePiece(index);
+			
+>>>>>>> 6a3bec4cb787d590a93b570f15a9fec1fd61c97d
 		}
 		else if(m.moveKind==Move.STEP)
 		{
