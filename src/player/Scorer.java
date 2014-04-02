@@ -1,5 +1,5 @@
 package player;
-
+import util.LinkedList;
 import util.IntHashMap;
 import board.Board;
 
@@ -32,11 +32,23 @@ class Scorer {
 		BoardColor bc = new BoardColor(b, color);
 		if(scoreCache.containsKey(bc))
 			return scoreCache.get(bc);
-		int score = b.getNumGoalPieces(color);
-		
-		
+		//Score based on the difference between your max partial network size and theirs
+		LinkedList<Integer> myNetworks = b.getNetworkSizes(color);
+		LinkedList<Integer> oppNetworks = b.getNetworkSizes(-color);		
+		int score = (getMax(myNetworks) - getMax(oppNetworks))*100;
+		score += (myNetworks.size() - oppNetworks.size())*10;
 		scoreCache.put(bc, score);
 		return score;
+	}
+
+	private static int getMax(LinkedList<Integer> lst) {
+		//Max of a list of positive numbers
+		int max = -1;
+		for (int i: lst) {
+			if (i > max)
+				max = i;
+		}
+		return max;
 	}
 	
 	static boolean hasScore(Board b, int color) {

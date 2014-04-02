@@ -220,7 +220,7 @@ public class Board {
 	 * @return	a list of the sizes of all the subnetworks.
 	 */
 	public LinkedList<Integer> getNetworkSizes(int color) {
-		return null;
+		return networks.getNetworkSizes(color);
 	}
 	
 	/**

@@ -136,9 +136,10 @@ public class MachinePlayer extends Player {
 			score = chooseMove(depth, oppositeColor(color), a, b).score;
 			Scorer.addScore(board, color, score);
 		}
-		
+		System.out.println("The score for this board is " + score);
 		board.rollback();
 		return score;
+
 	}
 
 
