@@ -58,7 +58,7 @@ public class MachinePlayer extends Player {
 			if(board.getNumPieces(color) > 8)		// Step move
 				maxDepth = 3;
 			else									// Add move
-				maxDepth = 2;
+				maxDepth = 5;
 		}
 		Move m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
 		Scorer.clearCache();
@@ -85,9 +85,10 @@ public class MachinePlayer extends Player {
 		else
 			bestScore = b;
 		
+		boolean first = true;
 		for(Move move : board.getValidMoves(color)) {
 			int moveScore = getScore(move, depth, color, a, b);
-			if(bestScore == Integer.MIN_VALUE || 
+			if(first || 
 					(this.color == color && moveScore > bestScore) ||					// This player's move (max score)
 					(oppositeColor(this.color) == color && moveScore < bestScore)) {	// Other player's move (min score)
 				bestMove = move;
@@ -96,10 +97,13 @@ public class MachinePlayer extends Player {
 					a = moveScore;
 				else
 					b = moveScore;
+				first = false;
 			}
 			if(a >= b)
 				break;
 		}
+		if (bestMove.moveKind == Move.QUIT)
+			System.out.println(board.getValidMoves(color));
 		return new ScoreMove(bestScore, bestMove);
 	}
 	
@@ -118,11 +122,11 @@ public class MachinePlayer extends Player {
 		
 		int score = 0;
 		if(board.hasNetwork(oppositeColor(this.color))) {
-			System.out.println("Found losing board <-----------------------\n" + board);
+			System.out.println("\n\nFound losing board\n" + board);
 			score = Scorer.MINSCORE;
 		}
 		else if(board.hasNetwork(this.color)) {
-			System.out.println("Found winning board <-----------------------\n" + board);
+			System.out.println("\n\nFound winning board\n" + board);
 			score = Scorer.MAXSCORE+depth;
 		}
 		else if(depth == 0 || Scorer.hasScore(board, color))
@@ -195,7 +199,7 @@ public class MachinePlayer extends Player {
 		rhett.forceMove(new Move(1, 7));
 		
 		System.out.println(rhett.board);
-		System.out.println("There should be a black network \n" + rhett.board.hasNetwork(Board.BLACK));
+		System.out.println("There should be a black network \n" + rhett.board.hasNetwork(Board.BLACK) + "<--------------------------");
 	}
 
 }
