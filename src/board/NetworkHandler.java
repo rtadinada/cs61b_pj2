@@ -155,6 +155,20 @@ class NetworkHandler {
 		ajeya.makeMove(new Move(1, 3), Board.WHITE);
 		System.out.println("Board: \n" + ajeya);
 		System.out.println("There is no white network: " + ajeya.hasNetwork(Board.WHITE));
+
+		NetworkHandler ravi = new NetworkHandler();
+		ravi.makeMove(new Move(1, 2), Board.BLACK);
+		ravi.makeMove(new Move(2, 2), Board.BLACK);
+		ravi.makeMove(new Move(4, 2), Board.BLACK);
+		ravi.makeMove(new Move(5, 0), Board.BLACK);
+		ravi.makeMove(new Move(4, 3), Board.BLACK);
+		ravi.makeMove(new Move(6, 4), Board.BLACK);
+		ravi.makeMove(new Move(3, 7), Board.BLACK);
+		ravi.makeMove(new Move(6, 7), Board.BLACK);
+		ravi.makeMove(new Move(2, 0), Board.BLACK);
+		ravi.makeMove(new Move(4, 0), Board.BLACK);
+		System.out.println(ravi);
+		System.out.println("There is no black network: " + ravi.hasNetwork(Board.BLACK));
 	}
 
 	public String toString() {
@@ -402,13 +416,6 @@ class NetworkHandler {
 		{
 			int index= 0;
 			if(color == Board.BLACK)
-<<<<<<< HEAD
-				blackIndices.remove(blackIndices.size() - 1);//It's assumed that m was the last move8
-			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
-				whiteIndices.remove(whiteIndices.size() - 1);//Most to least recent
-			int i = m.x1*10 + m.y1;
-			pieces[i].color = 0;
-=======
 				index = blackIndices.remove(0);//It's assumed that m was the last move8
 			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
 				index = whiteIndices.remove(0);//Most to least recent
@@ -416,7 +423,6 @@ class NetworkHandler {
 			// pieces[i] = new GamePiece();
 			removePiece(index);
 			
->>>>>>> 6a3bec4cb787d590a93b570f15a9fec1fd61c97d
 		}
 		else if(m.moveKind==Move.STEP)
 		{
@@ -448,7 +454,7 @@ class NetworkHandler {
 			if (currPiece != null && currPiece.color == color) {
 				int distance = numToEndGoal(currPiece, 1, -1, -1);
 				if (distance >= 5) {
-					System.out.println("Found network: \n" + pieces);
+					System.out.println("Found network: \n" + this);
 					return true;
 				}
 			}
