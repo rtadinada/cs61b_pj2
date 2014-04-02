@@ -56,9 +56,9 @@ public class MachinePlayer extends Player {
 		int maxDepth = searchDepth;
 		if(maxDepth == VARDEPTH) {
 			if(board.getNumPieces(color) > 8)		// Step move
-				maxDepth = 3;
+				maxDepth = 4;
 			else									// Add move
-				maxDepth = 5;
+				maxDepth = 4;
 		}
 		Move m;
 		if(board.getNumPieces(color) == 0) { 		// First move starts in center
@@ -67,7 +67,9 @@ public class MachinePlayer extends Player {
 				m = new Move(3, 4);
 		}
 		else {
-			m = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE).move;
+			ScoreMove sm = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE);
+			m = sm.move;
+			System.out.println("This move has a score of " + sm.score + ".");
 			Scorer.clearCache();
 		}
 		board.makeMove(m, color);
@@ -93,9 +95,11 @@ public class MachinePlayer extends Player {
 		else
 			bestScore = b;
 		
+		LinkedList<ScoreMove> scores = new LinkedList<ScoreMove>();
 		boolean first = true;
 		for(Move move : board.getValidMoves(color)) {
 			int moveScore = getScore(move, depth, color, a, b);
+			scores.add(new ScoreMove(moveScore, move));
 			if(first || 
 					(this.color == color && moveScore > bestScore) ||					// This player's move (max score)
 					(oppositeColor(this.color) == color && moveScore < bestScore)) {	// Other player's move (min score)
@@ -110,6 +114,8 @@ public class MachinePlayer extends Player {
 			if(a >= b)
 				break;
 		}
+		if(depth == 2 && bestScore <= Scorer.MINSCORE)
+			System.out.println("All moves should have losing scores:\n " + scores);
 		return new ScoreMove(bestScore, bestMove);
 	}
 	
@@ -129,10 +135,10 @@ public class MachinePlayer extends Player {
 		int score = 0;
 		if(board.hasNetwork(oppositeColor(this.color))) {
 			System.out.println("\n\nFound losing board\n" + board);
-			score = Scorer.MINSCORE;
+			score = Scorer.MINSCORE-depth;
 		}
 		else if(board.hasNetwork(this.color)) {
-			System.out.println("\n\nFound winning board\n" + board);
+			System.out.println("\n\nFound winning board\n");// + board);
 			score = Scorer.MAXSCORE+depth;
 		}
 		else if(depth == 0 || Scorer.hasScore(board, color)) {

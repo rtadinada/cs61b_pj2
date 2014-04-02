@@ -8,4 +8,8 @@ class ScoreMove {
 		this.score = score;
 		this.move = move;
 	}
+	
+	public String toString() {
+		return "Move: " + move + "\n Score: " + score;
+	}
 }
