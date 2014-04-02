@@ -290,12 +290,11 @@ class NetworkHandler {
 	 * Determines if a particular location on the board is a goal location for that color
 	 * 
 	 *Checks to see if the piece is in the side columns for white or the top and bottom rows for black.
-	 * -1 indicates the piece is in the top or left
-	 * 1 indicates the piece is in the bottom or right
-	 * 0 indicates the piece is not in a goal.
 	 * @param color		color of the piece being placed
 	 * @param row 		row the piece is placed
 	 * @param col		column the piece is placed
+	 * 
+	 * @return -1 for top or left, 1 for bottom or right, 0 for not in goal
 	 */
 	private int inGoal(int color, int row, int col)
 	{
@@ -371,7 +370,9 @@ class NetworkHandler {
 	}
 	/**
 	 * Removes the piece at the specified index from the memories of its neighbors, 
-	 * and wipes its own memory
+	 * and wipes its own memory. Sets neighbor's pointers to its own pointers, if
+	 * neighbors are not null
+	 * 
 	 * 
 	 * @param ind		The index of the piece being removed
 	 */
@@ -391,7 +392,8 @@ class NetworkHandler {
 	}
 	/**
 	 * Adds the specified piece to the memory of the pieces it points to and points to those pieces in turn
-	 * Goes through both lists of pieces and adds only the pieces closest to itself
+	 * Goes through both lists of pieces and adds only the pieces closest to itself, that are within
+	 * its 'line of sight'
 	 * 
 	 * @param added		The GamePiece that is being added to the board
 	 */
@@ -418,41 +420,14 @@ class NetworkHandler {
 		}
 		
 	}
-	
-	
-	//	private void undoBooleans(GamePiece removed)
-	//	{
-	//		if(removed ==null||(removed.connectedEnd==false&&removed.connectedStart==false))
-	//			return;
-	//		for(int x = 0; x<3; x++)
-	//			for (int y = 0; y<3; y++)
-	//			{
-	//				GamePiece currNeighbor = removed.pointers[x][y];
-	//				if(currNeighbor)
-	//			}
-	//				
-	//	}
-	//	private void updateBooleans(GamePiece added)
-	//	{
-	//		if(added ==null)
-	//			return;
-	//		if(added.connectedStart||added.connectedEnd)
-	//		{
-	//			for(int x = 0; x<3; x++)
-	//			{
-	//				for(int y = 0; y<3; y++)
-	//				{
-	//					GamePiece currNeighbor = added.pointers[x][y];
-	//					if(currNeighbor == null||(added.connectedStart==currNeighbor.connectedStart&&added.connectedEnd==currNeighbor.connectedEnd))
-	//						continue;
-	//					currNeighbor.connectedEnd=added.connectedEnd;
-	//					currNeighbor.connectedStart=added.connectedStart;
-	//					updateBooleans(currNeighbor);
-	//				}
-	//			}
-	//		}
-	//	}
-	
+	/**
+	 * Determines if a potential neighbor should be added to the added piece's list of pointers
+	 * Makes sure that the potential neighbor is closer than the current neighbor in that direction
+	 * Determines which direction the neighbor is from the added piece. 
+	 * 
+	 * @param added 			The GamePiece being added to the board, whose neighbors are being set. 
+	 * @param potentialNeighbor	The GamePiece that is being considered as a neighbor
+	 */
 	
 	private void setNeighbors(GamePiece added, GamePiece potentialNeighbor)
 	{
@@ -460,28 +435,28 @@ class NetworkHandler {
 		int col = added.col;
 		int prow = potentialNeighbor.row;
 		int pcol = potentialNeighbor.col;
-		if(prow == row)
+		if(prow == row) //Same row neighbor
 		{
 			if (pcol<col &&added.distance(potentialNeighbor)<added.distance(added.pointers[1][0]))
 				added.pointers[1][0] = potentialNeighbor;
 			else if(pcol>col&&added.distance(potentialNeighbor)<added.distance(added.pointers[1][2]))
 				added.pointers[1][2]= potentialNeighbor;
 		}
-		else if(pcol == col)
+		else if(pcol == col) //Same column neighbor
 		{
 			if(prow<row&added.distance(potentialNeighbor)<added.distance(added.pointers[0][1]))
 				added.pointers[0][1]= potentialNeighbor;
 			else if (prow>row&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][1]))
 				added.pointers[2][1] = potentialNeighbor;
 		}
-		else if((prow-row) == (pcol-col))
+		else if((prow-row) == (pcol-col)) //Positive slope neighbor
 		{
 			if(pcol<col&&added.distance(potentialNeighbor)<added.distance(added.pointers[0][0]))
 				added.pointers[0][0]= potentialNeighbor;
 			else if(pcol>col&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][2]))
 				added.pointers[2][2] = potentialNeighbor;
 		}
-		else if((prow-row) == -(pcol-col))
+		else if((prow-row) == -(pcol-col))//Negative slope neighbor
 		{
 			if(pcol<col&&added.distance(potentialNeighbor)<added.distance(added.pointers[2][0]))
 				added.pointers[2][0] = potentialNeighbor;
@@ -509,16 +484,22 @@ class NetworkHandler {
 			removePiece(index);
 		}
 		else if(m.moveKind==Move.STEP) {
-			Move newMove = new Move(m.x2, m.y2, m.x1, m.y1);
+			Move newMove = new Move(m.x2, m.y2, m.x1, m.y1); //Simple reverse step
 			makeMove(newMove, color);
 		}
-		clearVisitation(color);
+		clearVisitation(color); //Clears visited flags from networkFinding
 		clearVisitation(-color);
 	}
+	
+	/**
+	 * Removes flags from finding networks by trawling through GamePieces. 
+	 * This is so that networkSizes can be recomputed upon rollback and trying something new;
+	 * Makes sure all visited boxes are false
+	 * 
+	 * @param color		color of the player who made the move
+	 */
 
 	private void clearVisitation(int color) {
-		//Goes through every piece of color, and makes the visited box all false.
-		//This is so that networkSizes can be recomputed upon rollback and trying something new;
 		LinkedList<Integer> listOfPieces;
 		if (color == Board.BLACK) {
 			listOfPieces = blackIndices;
@@ -550,11 +531,9 @@ class NetworkHandler {
 		}
 		for (int i = start; i <= step*7; i += step) {
 			GamePiece currPiece = pieces[i];
-			// System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
 			if (currPiece != null && currPiece.color == color) {
 				int distance = numToEndGoal(currPiece, 0, -1, -1);
-				if (distance >= 5) {
-					// System.out.println("Found network: \n" + this);
+				if (distance >= 5) { //Ensures the network is long enough
 					return true;
 				}
 			}
@@ -577,35 +556,31 @@ class NetworkHandler {
 	*/
 	private int numToEndGoal(GamePiece piece, int currDist, int prevDirection, int fromDirection) {
 		if (inGoal(piece.color, piece.row, piece.col) == 1) {
-			// System.out.println("We've reached something on the end goal; return the distance built up so far: " + currDist);
 			return currDist;
 		}
 		piece.visited = true;
-		// System.out.println("Just visited the piece at (" + piece.col + ", " + piece.row + "): " + piece.visited);
 		int currMax = -1;
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				if ((x + 3*y != prevDirection) && (x + 3*y != fromDirection)) {
-					// System.out.println("Checking for neighbors in (" + x + ", " + y + ") direction: ");
+		for (int y = 0; y < 3; y++) 
+		{
+			for (int x = 0; x < 3; x++) 
+			{
+				if ((x + 3*y != prevDirection) && (x + 3*y != fromDirection)) 
+				{
 					GamePiece neighbor = piece.pointers[y][x];
-					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) {
-						// System.out.println("The neighbor: \n" + neighbor);
-						// System.out.println("Neighbor at (" + neighbor.col + ", " + neighbor.row + ")");
-						// System.out.println("It should not have been visited yet: " + neighbor.visited);
+					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) 
+					{
 						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));
-						// System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
-						if (distFromNeighbor > currMax) {
-							// System.out.println("This is larger than the longest distance we have so far, setting the currMax to this value.");
+						if (distFromNeighbor > currMax) 
+						{
 							currMax = distFromNeighbor;
 						}	
 					}
-					else {
-						// System.out.println("The neighbor: \n" + neighbor + "\nis nonexistent or the wrong color.");
+					else 
+					{
 					}	
 				}
 			}
 		}
-		// System.out.println("We've checked everything; this call is about to return: the maximum distance to the end goal from here is " + currMax);
 		piece.visited = false;
 		return currMax;	
 	}
@@ -632,10 +607,9 @@ class NetworkHandler {
 					break;
 				}
 				GamePiece piece = pieces[i];
-				// System.out.println("Checking " + i + "\n:" + piece);
-				if (piece != null && !(piece.visited) && piece.color == color) {
+				if (piece != null && !(piece.visited) && piece.color == color) //Checks if this piece is part of a new subnetwork
+				{
 					int maxLength = maxConnectionLength(piece, color, 0, -1);
-					// System.out.println("Connections from piece at (" + piece.col + ", " + piece.row + ") " + maxLength);
 					networkSizes.add(maxLength);
 				}
 			}
@@ -643,6 +617,16 @@ class NetworkHandler {
 		return networkSizes;
 	}
 
+	/**
+	 * Returns the number of connections between two pieces of the specified
+	 * color on the board
+	 * 
+	 * @param piece 			The piece that you are recursively searching from
+	 * @param prevDirection		The direction your search was called from
+	 * @param numSoFar			The number of connections made thus far
+	 * @param color				color of the player
+	 * @return					the number of connections of the color
+	 */
 
 	private int maxConnectionLength(GamePiece piece, int color, int numSoFar, int prevDirection) {
 		piece.visited = true;
@@ -650,18 +634,22 @@ class NetworkHandler {
 			return numSoFar;
 		}
 		int maxLength = numSoFar;
-		// System.out.println("Visited piece at (" + piece.col + ", " + piece.row + "): \n" + piece);
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				if ((x + 3*y) != prevDirection && !(inGoal(color, piece.row, piece.col) == -1 && inGoal(color, y, x) == -1)) {
+		for (int y = 0; y < 3; y++) 
+		{
+			for (int x = 0; x < 3; x++) 
+			{
+				if ((x + 3*y) != prevDirection && !(inGoal(color, piece.row, piece.col) == -1 && inGoal(color, y, x) == -1)) 
+				{
 					GamePiece neighbor = piece.pointers[y][x];
-					if (!(neighbor == null) && !(neighbor.visited) && (neighbor.color == color)) {
-						// System.out.println("Calling recursively on piece at (" + neighbor.col + ", " + neighbor.row + "): \n" + neighbor);
-						int distFrom = maxConnectionLength(neighbor, color, numSoFar + 1, x + 3*y);
-						// System.out.println("Result: " + distFrom);
-						if (distFrom > maxLength) {
+					if (!(neighbor == null) && !(neighbor.visited) && (neighbor.color == color)) 
+					{
+						int distFrom = maxConnectionLength(neighbor, color, numSoFar + 1, x + 3*y); //Recursive call on neighbors
+						if (distFrom > maxLength) 
+						{
 							maxLength = distFrom;
-						} else {
+						} 
+						else 
+						{
 							neighbor.visited = false;
 						}
 					}
@@ -672,14 +660,7 @@ class NetworkHandler {
 		numSoFar = 0;
 		return maxLength;
 	}
-	/**
-	 * Returns the number of connections between two pieces of the specified
-	 * color on the board
-	 * 
-	 * @param color		color of the player
-	 * @return	the number of connections of the color color
-	 */
-
+	
 }
 class GamePiece
 {
