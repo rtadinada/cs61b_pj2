@@ -67,9 +67,8 @@ public class MachinePlayer extends Player {
 				m = new Move(3, 4);
 		}
 		else {
-			ScoreMove sm = chooseMove(maxDepth, color, Scorer.MINSCORE, Scorer.MAXSCORE);
+			ScoreMove sm = chooseMove(maxDepth, color, Scorer.MINSCORE-1, Scorer.MAXSCORE+1);
 			m = sm.move;
-			//System.out.println("This move has a score of " + sm.score + ".");
 			Scorer.clearCache();
 		}
 		board.makeMove(m, color);
@@ -83,6 +82,7 @@ public class MachinePlayer extends Player {
 	 * 
 	 * @param depth		the max depth to search to
 	 * @param color		the color whose score to maximize
+	 * @param a 		
 	 * @return	the highest scoring move and score
 	 */
 	private ScoreMove chooseMove(int depth, int color, int a, int b) {
@@ -96,25 +96,27 @@ public class MachinePlayer extends Player {
 
 		LinkedList<ScoreMove> scores = new LinkedList<ScoreMove>();
 		boolean first = true; //first is used to get the method started
-		for(Move move : board.getValidMoves(color)) {
+		for(Move move : board.getValidMoves(color)) 
+		{
 			int moveScore = getScore(move, depth, color, a, b);
 			scores.add(new ScoreMove(moveScore, move));
-			if(first || 
-					(this.color == color && moveScore > bestScore) ||					// This player's move (max score)
-					(oppositeColor(this.color) == color && moveScore < bestScore)) {	// Other player's move (min score)
+			if(first || (this.color == color && moveScore > bestScore) ||(oppositeColor(this.color) == color && moveScore < bestScore)) // This player's move (max score)
+			{	// Other player's move (min score)
 				bestMove = move;
 				bestScore = moveScore;
 				if(this.color == color)
+				{
 					a = moveScore;
+				}
 				else
+				{
 					b = moveScore;
+				}
 				first = false;
 			}
 			if(a >= b)
 				break;
 		}
-		//if(depth == 2 && bestScore <= Scorer.MINSCORE)
-		//System.out.println("All moves should have losing scores:\n " + scores);
 		return new ScoreMove(bestScore, bestMove);
 	}
 
@@ -132,12 +134,12 @@ public class MachinePlayer extends Player {
 		depth--;		
 
 		int score = 0;
-		if(board.hasNetwork(oppositeColor(this.color))) {
-			//System.out.println("\n\nFound losing board\n" + board);
+		if(board.hasNetwork(oppositeColor(this.color))) 
+		{
 			score = Scorer.MINSCORE-depth;
 		}
-		else if(board.hasNetwork(this.color)) {
-			//System.out.println("\n\nFound winning board\n");// + board);
+		else if(board.hasNetwork(this.color)) 
+		{
 			score = Scorer.MAXSCORE+depth;
 		}
 		else if(depth == 0 || Scorer.hasScore(board, color)) {
@@ -147,7 +149,6 @@ public class MachinePlayer extends Player {
 			score = chooseMove(depth, oppositeColor(color), a, b).score;
 			Scorer.addScore(board, color, score);
 		}
-		//System.out.println("The score for this board is " + score);
 		board.rollback();
 		return score;
 

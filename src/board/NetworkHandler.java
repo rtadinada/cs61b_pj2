@@ -656,8 +656,6 @@ class NetworkHandler {
 				}
 			}
 		}
-		//piece.visited = false;
-		numSoFar = 0;
 		return maxLength;
 	}
 
@@ -682,13 +680,20 @@ class GamePiece
 		col = c;
 		color = colr;
 		pointers = new GamePiece[3][3];
-		visited = false;
+		visited = false; //flag for finding networks
 	}
 	GamePiece()
 	{
 		this(-1,-1,-1);
 	}
 
+	/**
+	 * Determines the distance of one game piece from another, only along straight lines 
+	 * (not true distance, just taxi-wise)
+	 * 
+	 * @return returns the difference between the summed indices of this piece from summed indices
+	 * of other piece
+	 */
 
 	public int distance (GamePiece other)
 	{
@@ -704,24 +709,35 @@ class GamePiece
 				if (x == 1 && y == 1) {
 					if (color == Board.WHITE) {
 						str += " W ";
-					} else if (color == Board.BLACK) {
+					} 
+					else if (color == Board.BLACK) 
+					{
 						str += " B ";
-					} else {
+					} 
+					else 
+					{
 						str += " X ";
 					}
 
 				}
-				else {
+				else 
+				{
 					GamePiece neighbor = pointers[y][x];
-					if (neighbor == null) {
+					if (neighbor == null) 
+					{
 						str += " X ";
-					} else if (neighbor.color == Board.BLACK) {
+					} 
+					else if (neighbor.color == Board.BLACK) 
+					{
 						str += " B ";
-					} else if (neighbor.color == Board.WHITE) {
+					} 
+					else if (neighbor.color == Board.WHITE) 
+					{
 						str += " W ";
 					}
 				}
-				if (x == 2) {
+				if (x == 2) 
+				{
 					str += "\n";
 				}
 			}

@@ -56,6 +56,7 @@ public class Board {
 
 	/**
 	* String representation:
+	* @return returns a String describing the board
 	*/
 
 	public String toString() {
@@ -81,7 +82,12 @@ public class Board {
 		str += "\n --- --- --- --- --- --- --- --- \n";
 		return str;
 	}
-	
+	/**
+	 * Determines if one board equals another. o is assumed to be a Board object
+	 * 
+	 * @param o 		Assumed to be a Board object
+	 * @return			boolean true or false
+	 */
 	public boolean equals(Object o) {
 		Board b = (Board)o;
 		for(int x = 0; x < 8; x++) {
@@ -92,7 +98,11 @@ public class Board {
 		}
 		return true;
 	}
-	
+	/**
+	 * hashcode
+	 * 
+	 * @return returns hashcode of Board object.
+	 */
 	public int hashCode() {
 		int hashCode = 0;
 		for(int x = 0; x < 8; x++) {
@@ -124,7 +134,10 @@ public class Board {
 		networks.makeMove(m, color);
 	}
 	
-
+	/**
+	 * Increments the number of pieces of "color" on board
+	 * @param color 	color to be incremented
+	 */
 	private void incNum(int color) {
 		// Increments the number of pieces of "color" on board
 		if (color == WHITE) {
@@ -193,9 +206,13 @@ public class Board {
 		else {
 			for(int y = 1; y < 7; y++) {
 				if(isOccupied(0, y))
+				{
 					num1++;
+				}
 				if(isOccupied(7, y))
+				{
 					num2++;
+				}
 			}
 		}
 		return num1+num2 - (int)(0.5*Math.abs(num2-num1));
@@ -209,7 +226,8 @@ public class Board {
 	 * @param color		color of the player
 	 * @return	true if a network for the specified player exists, false otherwise
 	 */
-	public boolean hasNetwork(int color) {
+	public boolean hasNetwork(int color) 
+	{
 		return networks.hasNetwork(color);
 	}
 	
@@ -220,21 +238,10 @@ public class Board {
 	 * @param color		color of the player
 	 * @return	a list of the sizes of all the subnetworks.
 	 */
-	public LinkedList<Integer> getNetworkSizes(int color) {
+	public LinkedList<Integer> getNetworkSizes(int color) 
+	{
 		return networks.getNetworkSizes(color);
 	}
-	
-	/**
-	 * Returns the number of connections between two pieces of the specified
-	 * color on the board
-	 * 
-	 * @param color		color of the player
-	 * @return	the number of connections of the color color
-	 */
-	public int getNumConnections(int color) {
-		return -1;
-	}
-	
 	/**
 	 * Returns true if m is a valid move for the specified color, false
 	 * otherwise.
@@ -326,6 +333,8 @@ public class Board {
 
 	/**
 	* isValidAdd checks for a valid add move
+	* @param m 		Move being evaluated
+	* @param color	Color the move is being evaluated for
 	*/
 
 	private boolean isValidAdd(Move m, int color) {
@@ -355,6 +364,12 @@ public class Board {
 	* PRIVATE METHODS TO ASSIST getValidMoves
 	*/
 
+	/**
+	 * Returns all valid add moves
+	 * 
+	 * @param color 		color that add moves are being evaluated for
+	 * @return				LinkedList of Move objects describing all legal add moves
+	 */
 	private LinkedList<Move> getValidAdd(int color) {
 		// Returns a list of all valid add moves on the current board
 		LinkedList<Move> moves = new LinkedList<Move>();
@@ -368,6 +383,11 @@ public class Board {
 		}
 		return moves;
 	}
+	/**
+	 * Returns a list of all the indices of the pieces of a given color
+	 * @param color 	Player that pieces are being evaluated for
+	 * @return			LinkedList of Integer indices of the pieces in the pieces array. 
+	 */
 
 	private LinkedList<Integer> listOfPieces(int color) {
 		//Returns a list of coordinates containing a piece of this color
@@ -382,7 +402,12 @@ public class Board {
 		}
 		return coords;
 	}
-
+/**
+ * Returns a list of all possible valid step moves on the board for a particular color
+ * 
+ * @param color		The color the board is being evaluated for
+ * @return			A LinkedList of Move objects of all acceptable step moves
+ */
 	private LinkedList<Move> getValidStep(int color) {
 		// Returns a list of all valid step moves on the current board
 		LinkedList<Integer> stepFrom = listOfPieces(color);
@@ -403,6 +428,7 @@ public class Board {
 	}
 
 	public static void main(String[] args) {
+		/**
 		Board b = new Board();
 		System.out.println(b);
 
@@ -506,6 +532,6 @@ public class Board {
 		b2.makeMove(new Move(1, 1, 1, 2), BLACK);
 		System.out.println("Move black piece from (1, 2) to (1, 1): " + b2);
 		b2.rollback();
-		System.out.println("Rollback: " + b2);
+		System.out.println("Rollback: " + b2);*/
 	}
 }

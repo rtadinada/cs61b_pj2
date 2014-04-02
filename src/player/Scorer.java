@@ -36,47 +36,80 @@ class Scorer {
 		//Score based on the difference between your max partial network size and theirs
 		LinkedList<Integer> myNetworks = b.getNetworkSizes(color);
 		LinkedList<Integer> oppNetworks = b.getNetworkSizes(-color);		
-		// int score = (getMax(myNetworks) - getMax(oppNetworks))*100;
-		// score += (myNetworks.size() - oppNetworks.size())*10;
 		int score = 50*(10 - getMax(oppNetworks));
 		score += 10*getMax(myNetworks);
 		scoreCache.put(bc, score);
 		return score;
 	}
-
+	/**
+	 * Returns the size of the largest partial network
+	 * 
+	 * @param lst list of partial network sizes
+	 * @return
+	 */
 	private static int getMax(LinkedList<Integer> lst) {
 		//Max of a list of positive numbers
 		int max = -1;
-		for (int i: lst) {
+		for (int i: lst) 
+		{
 			if (i > max)
+			{
 				max = i;
+			}
 		}
 		return max;
 	}
 
-	static boolean hasScore(Board b, int color) {
+	/**
+	 * Determines if a board has already been scored for a color
+	 * @param b 	Board to check
+	 * @param color	color of the score being checked
+	 * @return
+	 */
+	static boolean hasScore(Board b, int color) 
+	{
 		return scoreCache.containsKey(new BoardColor(b, color));
 	}
 
-	static void addScore(Board b, int color, int score) {
+	/**
+	 * Inserts the score for the Board b for the color color into the list of scored boards
+	 * @param b 		Board being stored
+	 * @param color		Color the board was evaluated for
+	 * @param score		Score of the board evaluated
+	 */
+	static void addScore(Board b, int color, int score) 
+	{
 		scoreCache.put(new BoardColor(b, color), score);
 	}
 
-	static void clearCache() {
+	/**
+	 * clears the cache of scored boards. 
+	 */
+	
+	static void clearCache() 
+	{
 		scoreCache = new IntHashMap<BoardColor>(1500);
 	}
 
-	private static class BoardColor {
+	/**
+	 * Remembers what color a board was evaluated for 
+	 * @author User
+	 *
+	 */
+	private static class BoardColor 
+	{
 
 		Board b;
 		int color;
 
-		BoardColor(Board b, int color) {
+		BoardColor(Board b, int color) 
+		{
 			this.b = b;
 			this.color = color;
 		}
 
-		public int hashCode() {
+		public int hashCode() 
+		{
 			return b.hashCode()*3 + color;
 		}
 
