@@ -1,7 +1,7 @@
 package board;
 
 import java.util.Iterator;
-import player.MachinePlayer;
+
 import player.Move;
 import util.LinkedList;
 
@@ -19,12 +19,10 @@ class NetworkHandler {
 	GamePiece [] pieces;
 	LinkedList<Integer> blackIndices;
 	LinkedList<Integer> whiteIndices;
-	LinkedList<Integer> networkSizes;
 	NetworkHandler() 
 	{
 		blackIndices = new LinkedList<Integer>();
 		whiteIndices= new LinkedList<Integer>();
-		networkSizes = null;
 		pieces = new GamePiece[77];
 		for(int i = 0; i<=76; i++)
 		{
@@ -112,9 +110,9 @@ class NetworkHandler {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				if (g.pointers[y][x] == null) {
-					//System.out.println("At (" + x + ", " + y + "): " + null);
+					System.out.println("At (" + x + ", " + y + "): " + null);
 				} else {
-					//System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
+					System.out.println("At (" + x + ", " + y + "): " + g.pointers[y][x].color);
 				}
 					
 			}
@@ -146,6 +144,7 @@ class NetworkHandler {
 		System.out.println("Printing out black piece at (1, 4) \n" + rhett.pieces[41]);
 		System.out.println("Printing out black piece at (1, 7) \n" + rhett.pieces[71]);
 		System.out.println("There should be a black network \n" + rhett.hasNetwork(Board.BLACK));
+
 
 
 	}
@@ -218,7 +217,7 @@ class NetworkHandler {
 				whiteIndices.add(ind);
 			}
 			else
-				//System.out.println("Neither black nor white: Whassup?");
+				System.out.println("Neither black nor white: Whassup?");
 
 			addPiece(pieces[ind]);
 		}
@@ -408,10 +407,9 @@ class NetworkHandler {
 			step = 10; // The white goals on the left are 10, 20...70
 		}
 		for (int i = start; i <= step*7; i += step) {
-			System.out.println("Checking piece at " + i);
 			GamePiece currPiece = pieces[i];
-		if (currPiece != null && currPiece.color == color) {
-				System.out.println("Making call on piece at " + i + "\n" + currPiece);
+			System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
+			if (currPiece != null && currPiece.color == color) {
 				int distance = numToEndGoal(currPiece, 1, -1, -1);
 				if (distance >= 5) {
 					return true;
@@ -450,9 +448,7 @@ class NetworkHandler {
 					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) {
 						System.out.println("The neighbor: \n" + neighbor);
 						System.out.println("It should not have been visited yet: " + neighbor.visited);
-						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));          
-						networkSizes.add(distFromNeighbor);
-						System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
+						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));
 						System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
 						if (distFromNeighbor > currMax) {
 							System.out.println("This is larger than the longest distance we have so far, setting the currMax to this value.");
@@ -478,8 +474,8 @@ class NetworkHandler {
 	 * @param color		color of the player
 	 * @return	a list of the sizes of all the subnetworks.
 	 */
-	int partialNetworkLength(int color) {
-		return networkSizes;
+	LinkedList<Integer> getNetworkSizes(int color) {
+		return null;
 	}
 
 	/**
@@ -492,6 +488,9 @@ class NetworkHandler {
 	int getNumConnections(int color) 
 	{
 
+
+
+		return -1;
 	}
 
 }
