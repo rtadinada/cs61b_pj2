@@ -123,6 +123,7 @@ public class Board {
 		moves.add(m);
 		networks.makeMove(m, color);
 	}
+	
 
 	private void incNum(int color) {
 		// Increments the number of pieces of "color" on board
