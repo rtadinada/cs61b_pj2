@@ -176,7 +176,6 @@ class NetworkHandler {
 		test.makeMove(new Move(0, 1), Board.WHITE);
 		test.makeMove(new Move(1, 0), Board.BLACK);
 		test.undoMove(new Move(1, 0), Board.BLACK);
-		test.undoMove(new Move(0, 1), Board.WHITE);
 		System.out.println(test);
 	}
 
@@ -284,7 +283,6 @@ class NetworkHandler {
 	private void removePiece(int ind)
 	{
 		GamePiece toMove = pieces[ind];
-		toMove.color = 0;
 		for (int row = 0; row<3;row++) {
 			for(int col = 0; col<3; col++) {
 				GamePiece affectedNeighbor = toMove.pointers[row][col];
@@ -293,6 +291,7 @@ class NetworkHandler {
 				}																			 //pointers of those it pointed to
 			}											
 		}
+		pieces[ind] = new GamePiece(ind%10, ind/10, 0);
 	}
 	
 	private void addPiece(GamePiece added) {
