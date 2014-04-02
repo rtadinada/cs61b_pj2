@@ -389,8 +389,8 @@ class NetworkHandler {
 				blackIndices.remove(0);//It's assumed that m was the last move8
 			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
 				whiteIndices.remove(0);//Most to least recent
-			int i = m.x1*10 + m.y1;
-			pieces[i] = new GamePiece();
+			// int i = m.x1*10 + m.y1;
+			// pieces[i] = new GamePiece();
 		}
 		else if(m.moveKind==Move.STEP)
 		{
