@@ -408,7 +408,7 @@ class NetworkHandler {
 		}
 		for (int i = start; i <= step*7; i += step) {
 			GamePiece currPiece = pieces[i];
-			System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
+			// System.out.println("Looking at the piece at " + i + " on the game board: \n" + currPiece);
 			if (currPiece != null && currPiece.color == color) {
 				int distance = numToEndGoal(currPiece, 1, -1, -1);
 				if (distance >= 5) {
@@ -434,34 +434,34 @@ class NetworkHandler {
 	*/
 	private int numToEndGoal(GamePiece piece, int currDist, int prevDirection, int fromDirection) {
 		if (inGoal(piece.color, piece.row, piece.col) == 1) {
-			System.out.println("We've reached something on the end goal; return the distance built up so far: " + currDist);
+			// System.out.println("We've reached something on the end goal; return the distance built up so far: " + currDist);
 			return currDist;
 		}
 		piece.visited = true;
-		System.out.println("Just visited the piece at (" + piece.col + ", " + piece.row + "): " + piece.visited);
+		// System.out.println("Just visited the piece at (" + piece.col + ", " + piece.row + "): " + piece.visited);
 		int currMax = -1;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				if ((x + 3*y != prevDirection) && (x + 3*y != fromDirection)) {
-					System.out.println("Checking for neighbors in (" + x + ", " + y + ") direction: ");
+					// System.out.println("Checking for neighbors in (" + x + ", " + y + ") direction: ");
 					GamePiece neighbor = piece.pointers[y][x];
 					if ((neighbor != null) && (neighbor.row > 0) && (neighbor.col > 0) && !(neighbor.visited) && (neighbor.color == piece.color)) {
-						System.out.println("The neighbor: \n" + neighbor);
-						System.out.println("It should not have been visited yet: " + neighbor.visited);
+						// System.out.println("The neighbor: \n" + neighbor);
+						// System.out.println("It should not have been visited yet: " + neighbor.visited);
 						int distFromNeighbor = numToEndGoal(neighbor, currDist + 1, x + 3*y, (2 - x) + 3*(2 - y));
-						System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
+						// System.out.println("The distance from this neighbor to the end goal is " + distFromNeighbor);
 						if (distFromNeighbor > currMax) {
-							System.out.println("This is larger than the longest distance we have so far, setting the currMax to this value.");
+							// System.out.println("This is larger than the longest distance we have so far, setting the currMax to this value.");
 							currMax = distFromNeighbor;
 						}	
 					}
 					else {
-						System.out.println("The neighbor: \n" + neighbor + "\nis nonexistent or the wrong color.");
+						// System.out.println("The neighbor: \n" + neighbor + "\nis nonexistent or the wrong color.");
 					}	
 				}
 			}
 		}
-		System.out.println("We've checked everything; this call is about to return: the maximum distance to the end goal from here is " + currMax);
+		// System.out.println("We've checked everything; this call is about to return: the maximum distance to the end goal from here is " + currMax);
 		piece.visited = false;
 		return currMax;	
 	}
@@ -487,10 +487,7 @@ class NetworkHandler {
 	 */
 	int getNumConnections(int color) 
 	{
-
-
-
-		return -1;
+		  
 	}
 
 }
