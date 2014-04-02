@@ -1,7 +1,7 @@
 package board;
 
 import java.util.Iterator;
-
+import player.MachinePlayer;
 import player.Move;
 import util.LinkedList;
 
@@ -52,37 +52,37 @@ class NetworkHandler {
 	public static void main (String [] args)
 	{
 		NetworkHandler n = new NetworkHandler();
-		//System.out.println(n);
+		System.out.println(n);
 		n.makeMove(new Move(1, 1), Board.WHITE);
-		//System.out.println("Added white piece to 1, 1: \n" + n);
+		System.out.println("Added white piece to 1, 1: \n" + n);
 		n.makeMove(new Move(3, 3), Board.WHITE);
-		//System.out.println("Added white piece to 3, 3: \n" + n);
-		//System.out.println("The list of white locations: " + n.whiteIndices);
-		//System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
-		//System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
+		System.out.println("Added white piece to 3, 3: \n" + n);
+		System.out.println("The list of white locations: " + n.whiteIndices);
+		System.out.println("The white piece at (1, 1) should have a white neighbor at the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a white neighbor at the top left: \n" + n.pieces[33]);
 		n.makeMove(new Move(2, 2), Board.BLACK);
-		//System.out.println("Added a new black piece in between the two: \n" + n);
-		//System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
-		//System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
-		//System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
+		System.out.println("Added a new black piece in between the two: \n" + n);
+		System.out.println("The white piece at (1, 1) should have a black neighbor at the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a black neighbor at the top left: \n" + n.pieces[33]);
+		System.out.println("The black piece at (2, 2) should have white neighbors to the top left and bottom right: \n" + n.pieces[22]);
 		n.makeMove(new Move(1, 3, 2, 2), Board.BLACK);
-		//System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
-		//System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
-		//System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
-		//System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
+		System.out.println("Move the black piece out of the way to (1, 3): \n" + n);
+		System.out.println("The white piece at (1, 1) should have a black neighbor below and a white neighbor in the bottom right: \n" + n.pieces[11]);
+		System.out.println("The white piece at (3, 3) should have a white neighbor at the top right and a black neighbor to the left: \n" + n.pieces[33]);
+		System.out.println("Hmm, the black piece seems to have moved to (2, 1) instead: \n" + n.pieces[21]);
 		n.makeMove(new Move(1, 3, 2, 1), Board.BLACK);
-		//System.out.println("Trying to move to (1, 3) again: \n" + n);
+		System.out.println("Trying to move to (1, 3) again: \n" + n);
 		n.makeMove(new Move(5, 3, 3, 3), Board.WHITE);
-		//System.out.println("Didn't move anywhere.");
-		//System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
-		//System.out.println("Moved down two instead");
+		System.out.println("Didn't move anywhere.");
+		System.out.println("Trying to move white piece at (3, 3) to (5, 3) (right two): \n" + n);
+		System.out.println("Moved down two instead");
 		n.makeMove(new Move(6, 4, 1, 1), Board.WHITE);
-		//System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
-		//System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
-		//System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
-		//System.out.println("Seems not.");
-		//System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
-		//System.out.println("Seems not.");
+		System.out.println("Trying to move white piece at (1, 1) to (6, 4): \n" + n);
+		System.out.println("Moved to (1, 6) instead. I think somewhere you said x2 and x1 instead of x1 and y1");
+		System.out.println("Checking to see if there is a white piece at (1, 6): " + n.pieces[16]);
+		System.out.println("Seems not.");
+		System.out.println("Checking to see if there is a white piece at (6, 4), where we intended to move it: " + n.pieces[64]);
+		System.out.println("Seems not.");
 
 		/*
 		TESTS FOR hasNetwork:
@@ -95,19 +95,19 @@ class NetworkHandler {
 		n1.makeMove(new Move(5, 3), Board.WHITE);
 		n1.makeMove(new Move(0, 2), Board.WHITE);
 		n1.makeMove(new Move(7, 5), Board.WHITE);
-		//System.out.println("Testing white networks: \n" + n1);
-		//System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
-		//System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
-		//System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
-		//System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
-		//System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
-		//System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
+		System.out.println("Testing white networks: \n" + n1);
+		System.out.println("Neighbors of white piece at (0, 2): \n" + n1.pieces[2]);
+		System.out.println("Neighbors of white piece at (1, 1): \n" + n1.pieces[11]);
+		System.out.println("Neighbors of white piece at (3, 3): \n" + n1.pieces[33]);
+		System.out.println("Neighbors of white piece at (3, 1): \n" + n1.pieces[31]);
+		System.out.println("Neighbors of white piece at (5, 3): \n" + n1.pieces[53]);
+		System.out.println("Neighbors of white piece at (7, 5): \n" + n1.pieces[75]);
 
 
-		//System.out.println("Testing row versus column major: ");
-		//System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
-		//System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
-		//System.out.println("Printing out all neighbors of piece at (3, 1): ");
+		System.out.println("Testing row versus column major: ");
+		System.out.println("Trying (2, 0) for (0, 2): \n" + n1.pieces[20]);
+		System.out.println("Trying (1, 3) for (3, 1): \n" + n1.pieces[13]);
+		System.out.println("Printing out all neighbors of piece at (3, 1): ");
 		GamePiece g = n1.pieces[13];
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
@@ -119,13 +119,33 @@ class NetworkHandler {
 					
 			}
 		}
-		//System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
-		//System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
+		System.out.println("Trying (3, 5) for (5, 3): \n" + n1.pieces[35]);
+		System.out.println("Trying (5, 7) for (7, 5): \n" + n1.pieces[57]);
 
-		//System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
+		System.out.println("White has a network, should be true: \n" + n1.hasNetwork(Board.WHITE));
 
-
-
+		NetworkHandler rhett = new NetworkHandler();
+		rhett.makeMove(new Move(0, 1), Board.WHITE);
+		rhett.makeMove(new Move(1, 0), Board.BLACK);
+		rhett.makeMove(new Move(0, 2), Board.WHITE);
+		rhett.makeMove(new Move(1, 1), Board.BLACK);
+		rhett.makeMove(new Move(0, 4), Board.WHITE);
+		rhett.makeMove(new Move(3, 1), Board.BLACK);
+		rhett.makeMove(new Move(0, 5), Board.WHITE);
+		rhett.makeMove(new Move(3, 4), Board.BLACK);
+		rhett.makeMove(new Move(7, 1), Board.WHITE);
+		rhett.makeMove(new Move(1, 4), Board.BLACK);
+		rhett.makeMove(new Move(7, 2), Board.WHITE);
+		rhett.makeMove(new Move(1, 7), Board.BLACK);
+		
+		System.out.println(rhett);
+		System.out.println("Printing out black piece at (1, 0) \n" + rhett.pieces[1]);
+		System.out.println("Printing out black piece at (1, 1) \n" + rhett.pieces[11]);
+		System.out.println("Printing out black piece at (3, 1) \n" + rhett.pieces[13]);
+		System.out.println("Printing out black piece at (3, 4) \n" + rhett.pieces[43]);
+		System.out.println("Printing out black piece at (1, 4) \n" + rhett.pieces[41]);
+		System.out.println("Printing out black piece at (1, 7) \n" + rhett.pieces[71]);
+		System.out.println("There should be a black network \n" + rhett.hasNetwork(Board.BLACK));
 
 
 	}
@@ -391,7 +411,7 @@ class NetworkHandler {
 			System.out.println("Checking piece at " + i);
 			GamePiece currPiece = pieces[i];
 		if (currPiece != null && currPiece.color == color) {
-				System.out.println("Making call on piece: " + currPiece);
+				System.out.println("Making call on piece at " + i + "\n" + currPiece);
 				int distance = numToEndGoal(currPiece, 1, -1, -1);
 				if (distance >= 5) {
 					return true;
@@ -458,7 +478,7 @@ class NetworkHandler {
 	 * @param color		color of the player
 	 * @return	a list of the sizes of all the subnetworks.
 	 */
-	LinkedList<Integer> getNetworkSizes(int color) {
+	int partialNetworkLength(int color) {
 		return networkSizes;
 	}
 
@@ -472,9 +492,6 @@ class NetworkHandler {
 	int getNumConnections(int color) 
 	{
 
-
-
-		return -1;
 	}
 
 }

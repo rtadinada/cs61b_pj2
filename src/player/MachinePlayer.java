@@ -195,7 +195,7 @@ public class MachinePlayer extends Player {
 		rhett.forceMove(new Move(1, 7));
 		
 		System.out.println(rhett.board);
-		System.out.println(rhett.board.hasNetwork(Board.BLACK));
+		System.out.println("There should be a black network \n" + rhett.board.hasNetwork(Board.BLACK));
 	}
 
 }
