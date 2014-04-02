@@ -328,7 +328,7 @@ class NetworkHandler {
 	 */
 	void makeMove(Move m, int color) {
 		if(m.moveKind == Move.ADD) {
-			Integer ind = m.y1*10+m.x1;
+			Integer ind = m.y1*10+m.x1; //finds new index, adds it to appropriate list
 			pieces[ind].color = color;
 			if(color==(Board.BLACK)) {
 				blackIndices.add(ind);
@@ -337,13 +337,12 @@ class NetworkHandler {
 				whiteIndices.add(ind);
 			}
 
-			addPiece(pieces[ind]);
+			addPiece(pieces[ind]); //places the piece in the memory of its neighbors
 		}
 		else if(m.moveKind == Move.STEP)
 		{
-			//Delete the previous pointers!!!
 			int oldx = m.x2;
-			int oldy = m.y2;
+			int oldy = m.y2; 
 			int ind = oldy*10+oldx;
 			if(color==(Board.BLACK)) {
 				Iterator<Integer> blackIterator = blackIndices.iterator();
@@ -365,12 +364,17 @@ class NetworkHandler {
 					}
 				}
 			}
-			removePiece(ind);
+			removePiece(ind); //Removes piece from memory of its neighbors
 			Move nm = new Move(m.x1, m.y1);
 			makeMove(nm, color); // This will trigger the Add, rather than Step, functionality.
 		}
 	}
-	
+	/**
+	 * Removes the piece at the specified index from the memories of its neighbors, 
+	 * and wipes its own memory
+	 * 
+	 * @param ind		The index of the piece being removed
+	 */
 	
 	private void removePiece(int ind)
 	{
@@ -383,8 +387,14 @@ class NetworkHandler {
 				}																			 //pointers of those it pointed to
 			}											
 		}
-		pieces[ind] = new GamePiece(ind/10, ind%10, 0);
+		pieces[ind] = new GamePiece(ind/10, ind%10, 0); //Erasing the index and replacing it. 
 	}
+	/**
+	 * Adds the specified piece to the memory of the pieces it points to and points to those pieces in turn
+	 * Goes through both lists of pieces and adds only the pieces closest to itself
+	 * 
+	 * @param added		The GamePiece that is being added to the board
+	 */
 	
 	private void addPiece(GamePiece added) {
 		Iterator<Integer> blackIterator = blackIndices.iterator();
