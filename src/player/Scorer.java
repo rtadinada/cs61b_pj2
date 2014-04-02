@@ -36,8 +36,10 @@ class Scorer {
 		//Score based on the difference between your max partial network size and theirs
 		LinkedList<Integer> myNetworks = b.getNetworkSizes(color);
 		LinkedList<Integer> oppNetworks = b.getNetworkSizes(-color);		
-		int score = (getMax(myNetworks) - getMax(oppNetworks))*100;
-		score += (myNetworks.size() - oppNetworks.size())*10;
+		// int score = (getMax(myNetworks) - getMax(oppNetworks))*100;
+		// score += (myNetworks.size() - oppNetworks.size())*10;
+		int score = 50*(10 - getMax(oppNetworks));
+		score += 10*getMax(myNetworks);
 		scoreCache.put(bc, score);
 		return score;
 	}

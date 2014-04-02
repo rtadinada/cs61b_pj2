@@ -48,11 +48,11 @@ public class MachinePlayer extends Player {
 	/**
 	 * Returns a new <code>Move</code> by this player.  Internally records the
 	 * move (update the internal game board) as a move by this player.
+	 * Changes search depth based on whether pieces are being added or stepped
 	 * 
 	 * @return	the Move chosen by this player
 	 */
 	public Move chooseMove() {
-		long start = System.currentTimeMillis();
 		int maxDepth = searchDepth;
 		if(maxDepth == VARDEPTH) {
 			if(board.getNumPieces(color) > 8)		// Step move
@@ -73,14 +73,12 @@ public class MachinePlayer extends Player {
 			Scorer.clearCache();
 		}
 		board.makeMove(m, color);
-		double seconds = (System.currentTimeMillis() - start)/1000d;
-		System.out.println("Move chosen in " + seconds + " seconds.");
 		return m;
 	}
 	
 	/**
 	 * Returns the move with the best score for the selected player, doing a
-	 * recursive search to the specified depth. Returns an object that holds
+	 * recursive search to the specified depth. Returns a ScoreMove object that holds
 	 * the move and its score
 	 * 
 	 * @param depth		the max depth to search to
@@ -95,8 +93,9 @@ public class MachinePlayer extends Player {
 		else
 			bestScore = b;
 		
+
 		LinkedList<ScoreMove> scores = new LinkedList<ScoreMove>();
-		boolean first = true;
+		boolean first = true; //first is used to get the method started
 		for(Move move : board.getValidMoves(color)) {
 			int moveScore = getScore(move, depth, color, a, b);
 			scores.add(new ScoreMove(moveScore, move));
@@ -197,8 +196,8 @@ public class MachinePlayer extends Player {
 		return Board.BLACK;
 	}
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) 
+	{
 	}
 
 }
