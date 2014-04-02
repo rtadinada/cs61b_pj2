@@ -19,10 +19,13 @@ class NetworkHandler {
 	GamePiece [] pieces;
 	LinkedList<Integer> blackIndices;
 	LinkedList<Integer> whiteIndices;
+	LinkedList<Integer> networkSizes;
+
 	NetworkHandler() 
 	{
 		blackIndices = new LinkedList<Integer>();
 		whiteIndices= new LinkedList<Integer>();
+		networkSizes = new LinkedList<Integer>();
 		pieces = new GamePiece[77];
 		for(int i = 0; i<=76; i++)
 		{
@@ -378,7 +381,7 @@ class NetworkHandler {
 		if(m.moveKind==Move.ADD)
 		{
 			if(color == Board.BLACK)
-				blackIndices.remove(0);//It's assumed that m was the last move
+				blackIndices.remove(0);//It's assumed that m was the last move8
 			else if(color==Board.WHITE)//The LLs are defacto sorted in order of
 				whiteIndices.remove(0);//Most to least recent
 		}
@@ -475,7 +478,30 @@ class NetworkHandler {
 	 * @return	a list of the sizes of all the subnetworks.
 	 */
 	LinkedList<Integer> getNetworkSizes(int color) {
-		return null;
+		networkSizes = new LinkedList<Integer>();
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				int i;
+				if (color == Board.BLACK) {
+					i = 10*y + x; // Go row-by-row with Black (1, 2, 3...10, 11, 12...)
+				} else {
+					i = 10*x + y; //Go column-by-column with White (10, 20, 30,...1, 11, 21...)
+				}
+				GamePiece piece = pieces[i];
+				if (piece != null && !(piece.visited) && piece.color == color) {
+					networkSizes.add(maxConnectionLength(piece, color, 0));
+				}
+			}
+		}
+		return networkSizes;
+	}
+
+	/**
+	* Returns how many more pieces need to be placed for the player of this color to have a complete 
+	* network. 
+	*/
+	int numAwayFromNetwork(int color) {
+
 	}
 
 	/**
@@ -487,8 +513,9 @@ class NetworkHandler {
 	 */
 	int getNumConnections(int color) 
 	{
-		  
+
 	}
+
 
 }
 class GamePiece
